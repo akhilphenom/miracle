@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { ClerkLoaded, ClerkLoading, ClerkProvider } from "@clerk/nextjs";
+import Loading from "@/components/auth/Loading";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,8 +17,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={inter.className}>
+          <div className="h-dvh w-dvw flex flex-col">  
+            <ClerkLoading>
+              <Loading/>
+            </ClerkLoading>
+            <ClerkLoaded>
+              {children}
+            </ClerkLoaded>
+          </div>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
