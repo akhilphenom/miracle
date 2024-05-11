@@ -1,7 +1,11 @@
-import { withClerkMiddleware } from "@clerk/nextjs";
+import { authMiddleware } from "@clerk/nextjs";
 
-export default withClerkMiddleware();
+export default authMiddleware({
+  publicRoutes: [
+    '/forgot-password'
+  ]
+});
 
 export const config = {
-  matcher: ["/((?!.+.[w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)","/","/(api|trpc)(.*)"],
 };

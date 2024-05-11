@@ -1,12 +1,13 @@
 "use client";
 
 import { UserButton } from "@clerk/nextjs";
+import { SearchInput } from "./search-input";
 
 export const Navbar = () => {
     return (
-        <nav className="flex items-center gap-x-4 p-5 bg-green-400">
+        <nav className="flex items-center gap-x-4 p-5">
             <div className="hidden lg:flex flex-1">
-                Search
+                <SearchInput/>
             </div>
             <div>
                 <UserButton/>
