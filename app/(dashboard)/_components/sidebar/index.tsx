@@ -1,6 +1,5 @@
 import { AddOrganization } from "./add-organization"
 import { OrganizationList } from "./org-list"
-import Image from "next/image"
 
 export const Sidebar = () => {
     return (
@@ -8,15 +7,6 @@ export const Sidebar = () => {
             <div className="flex flex-col justify-center gap-y-4 p-3">
                 <AddOrganization/>
                 <OrganizationList/>
-            </div>
-            <div className="flex-1"></div>
-            <div className="bg-white p-[7px] rounded-sm mx-[5px] my-[7px]">
-                <Image 
-                src={'/logo.png'} 
-                alt={"Logo"}
-                width={60}
-                height={60}
-                />
             </div>
         </aside>
     )

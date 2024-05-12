@@ -2,8 +2,10 @@ import { authMiddleware } from "@clerk/nextjs";
 
 export default authMiddleware({
   publicRoutes: [
-    '/forgot-password'
-  ]
+    '/forgot-password',
+    '/test-api',
+    'api/clerk/test-endpoint',
+  ],
 });
 
 export const config = {
