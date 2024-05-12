@@ -27,7 +27,7 @@ function AuthState({children}: AuthStateProps) {
 export default function ({children}: DashboardLayoutProps) {
     return (
         <AuthState>
-            <main className="h-full w-full">
+            <main className="h-dvh w-dvw">
                 <Sidebar/>
                 <div className="pl-[60px] h-full">
                     <div className="flex h-full gap-x-3">
