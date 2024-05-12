@@ -15,7 +15,7 @@ export const OrganizationList = () => {
     return (
         <ul className="space-y-4">
             {userMemberships.data.map(({ organization: { id, name, imageUrl } }) => (
-                <OrganizationItem id={id} name={name} imageUrl={imageUrl}/>
+                <OrganizationItem key={id} id={id} name={name} imageUrl={imageUrl}/>
             ))}
         </ul>
     )

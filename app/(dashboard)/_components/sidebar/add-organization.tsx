@@ -1,6 +1,7 @@
 "use client";
 
 import { Hint } from "@/components/shared/hint";
+import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { CreateOrganization } from "@clerk/nextjs";
 import { Plus } from "lucide-react";
@@ -16,9 +17,9 @@ export const AddOrganization = () => {
                     sideOffset={20}
                     align="start"
                     >
-                        <button className="bg-white/25 h-full w-full rounded-md flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity">
+                        <Button asChild className="p-2 bg-white/25 h-full w-full rounded-md flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity">
                             <Plus className="text-white"></Plus>
-                        </button>
+                        </Button>
                     </Hint>
                 </div>
             </DialogTrigger>
