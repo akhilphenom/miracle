@@ -6,8 +6,10 @@ import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useDebounceValue } from "usehooks-ts";
 import queryString from "query-string";
+import { useAxios } from "@/lib/hooks/axios.hook";
 
 export const SearchInput = () => {
+    const { fetchData } = useAxios();
     const router = useRouter();
     const [value, setValue] = useState('');
     const [debouncedValue] = useDebounceValue(value, 100);
