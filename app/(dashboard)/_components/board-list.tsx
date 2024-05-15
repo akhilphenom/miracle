@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { EmptyResult } from "./empty-result";
 import { useEffect } from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useAxios } from "@/lib/hooks/axios.hook";
 
 interface BoardListProps {
     organizationId: string;
@@ -18,26 +18,7 @@ export const BoardList = ({
     query
 }: BoardListProps) => {
     const data = [];
-    const { getToken } = useAuth()
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const token = await getToken()
-                const response = await fetch('http://localhost:3000/api/clerk/test-endpoint', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                })
-
-                const result = await response.json()
-            } catch (err) { }
-        }
-
-        fetchData()
-    }, [getToken])
+    const { fetchData, loading, error, response } = useAxios();
     if(!data?.length) {
         return (
             <div className="w-full flex flex-col items-center p-4 justify-center">

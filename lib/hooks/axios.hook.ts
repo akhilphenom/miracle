@@ -2,11 +2,12 @@ import { useAuth } from "@clerk/nextjs"
 import axios from "axios"
 import { useEffect, useState } from "react"
 
+
 interface APIProps {
     url: string
     method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
-    data: any
-    params: any
+    data?: any
+    params?: any
 }
 
 export const useAxios = () => {
@@ -14,10 +15,9 @@ export const useAxios = () => {
     const [response, setResponse] = useState(null);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-    const axiosInstance = axios.create({
-        baseURL: process.env.API_BASE_URL
-    })
+    const axiosInstance = axios.create({ baseURL })
 
     axiosInstance.interceptors.request.use(async (config) => {
         const token = await getToken();
@@ -48,7 +48,7 @@ export const useAxios = () => {
 
         try {
             const result = await axiosInstance({
-                url: `${process.env.API_BASE_URL}/${url}`,
+                url: baseURL + `/${url}`,
                 method,
                 data,
                 params,
