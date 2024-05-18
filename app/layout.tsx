@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkLoaded, ClerkLoading, ClerkProvider } from "@clerk/nextjs";
 import Loading from "@/components/auth/Loading";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,6 +31,7 @@ export default function RootLayout({
             <ClerkLoaded>
               {children}
             </ClerkLoaded>
+            <Toaster/>
           </div>
         </body>
       </html>

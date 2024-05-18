@@ -1,7 +1,7 @@
 "use client";
 
 import { useOrganization } from "@clerk/nextjs";
-import { EmptyOrganization } from "./_components/empty-oraganization"
+import { EmptyOrganization } from "./_components/empty-organization"
 import { BoardList } from "./_components/board-list";
 
 interface DashboardPageProps {
