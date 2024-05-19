@@ -21,12 +21,16 @@ export const BoardList = ({
     const { fetchData: fetchBoardsData, loading: boardsLoading, response: boardsResponse } = useAxios();
     const { fetchData: fetchCreateBoardData, loading: boardCreating } = useAxios();
     const [boards, setBoards] = useState<any>(null);
+    const placeholders = [].constructor(10).fill(0).map((_: number, index: number) => `./placeholders/${index}.svg`)
     
     const onCreateBoard = async () => {
         await fetchCreateBoardData({
             url: 'miracle-organization/create-board',
             method: 'POST',
-            params: { organizationId }
+            params: { 
+                organizationId,
+                imageUrl: placeholders[Math.floor(Math.random()*placeholders.length)]
+            }
         })
         await getBoards();
     }
@@ -41,7 +45,6 @@ export const BoardList = ({
 
     useEffect(() => {
         if(boardsResponse?.data?.length) {
-            console.log(boardsResponse.data)
             setBoards(boardsResponse.data)
         }
     }, [boardsResponse])
@@ -53,7 +56,7 @@ export const BoardList = ({
     if(boardsLoading) {
         return (
             <div className="w-full h-full align-top justify-center my-8">
-                <h6 className=" text-muted-foreground text-sm">Loading...</h6>
+                <h6 className="text-muted-foreground text-sm">Loading...</h6>
             </div>
         )
     }
@@ -78,8 +81,12 @@ export const BoardList = ({
     }
     
     return (
-        <div>
-            { boards.map((board: IBoardCardItemProps) => <BoardCardItem {...board}/>)  }
+        <div className="w-full h-full flex flex-col gap-3">
+            <p className="text-3xl">{ query.favourites ? "Favourite Boards": "Team Boards" }</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 py-4
+            flex-1 basis-0 min-h-0 overflow-auto">
+                { boards.map((board: IBoardCardItemProps) => <BoardCardItem {...board}/>)  }
+            </div>
         </div>
     )
 }

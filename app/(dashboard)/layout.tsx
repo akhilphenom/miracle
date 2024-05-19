@@ -32,7 +32,7 @@ export default function ({children}: DashboardLayoutProps) {
                 <div className="pl-[60px] h-full">
                     <div className="flex h-full gap-x-3">
                         <OrganizationSidebar/>
-                        <div className="h-full flex-1">
+                        <div className="h-full flex-1 flex flex-col">
                             <Navbar/>
                             {children}
                         </div>
