@@ -2,7 +2,6 @@ import { useAuth } from "@clerk/nextjs"
 import axios from "axios"
 import { useEffect, useState } from "react"
 
-
 interface APIProps {
     url: string
     method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
@@ -12,7 +11,16 @@ interface APIProps {
 
 export const useAxios = () => {
     const { getToken } = useAuth()
-    const [response, setResponse] = useState(null);
+
+    const [response, setResponse] = useState<{
+        data: any,
+        success: boolean,
+        message: string,
+        showPopUp: boolean,
+        code: number,
+        responseType: 'Error' | 'Information' | 'Question' | 'Warning' | 'Success',
+    } | null>(null);
+
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
