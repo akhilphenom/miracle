@@ -5,6 +5,8 @@ import { EmptyResult } from "./empty-result";
 import { useAxios } from "@/lib/hooks/axios.hook";
 import { useEffect, useState } from "react";
 import { BoardCardItem, IBoardCardItemProps } from "./board-card";
+import NewBoard from "./new-board";
+import { toast } from "sonner";
 
 interface BoardListProps {
     organizationId: string;
@@ -20,8 +22,9 @@ export const BoardList = ({
 }: BoardListProps) => {
     const { fetchData: fetchBoardsData, loading: boardsLoading, response: boardsResponse } = useAxios();
     const { fetchData: fetchCreateBoardData, loading: boardCreating } = useAxios();
+    const { fetchData: deleteBoardData, loading: boardDeleting } = useAxios();
     const [boards, setBoards] = useState<any>(null);
-    const placeholders = [].constructor(10).fill(0).map((_: number, index: number) => `./placeholders/${index}.svg`)
+    const placeholders = [].constructor(10).fill(0).map((_: number, index: number) => `./placeholders/${index+1}.svg`)
     
     const onCreateBoard = async () => {
         await fetchCreateBoardData({
@@ -32,6 +35,7 @@ export const BoardList = ({
                 imageUrl: placeholders[Math.floor(Math.random()*placeholders.length)]
             }
         })
+        toast.success('Board created!')
         await getBoards();
     }
 
@@ -43,9 +47,21 @@ export const BoardList = ({
         })
     }
 
+    const deleteBoard = async (boardId: string) => {
+        await deleteBoardData({
+            url: 'miracle-organization/delete-board',
+            method: 'POST',
+            params: { boardId }
+        })
+        toast.success('Board deleted!')
+        await getBoards()
+    }
+
     useEffect(() => {
         if(boardsResponse?.data?.length) {
-            setBoards(boardsResponse.data)
+            setBoards(boardsResponse.data);
+        } else {
+            setBoards([])
         }
     }, [boardsResponse])
 
@@ -55,8 +71,15 @@ export const BoardList = ({
 
     if(boardsLoading) {
         return (
-            <div className="w-full h-full align-top justify-center my-8">
-                <h6 className="text-muted-foreground text-sm">Loading...</h6>
+            <div className="w-full h-full flex flex-col gap-3">
+                <p className="text-3xl">{ query.favourites ? "Favourite Boards": "Team Boards" }</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 py-4
+                flex-1 basis-0 min-h-0 overflow-auto">
+                    <NewBoard onClick={onCreateBoard} disabled={boardCreating}/>
+                    {
+                        [].constructor(5).map((_: null, index: string) => <BoardCardItem.Skeleton key={index}/>)
+                    }
+                </div>
             </div>
         )
     }
@@ -85,7 +108,8 @@ export const BoardList = ({
             <p className="text-3xl">{ query.favourites ? "Favourite Boards": "Team Boards" }</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 py-4
             flex-1 basis-0 min-h-0 overflow-auto">
-                { boards.map((board: IBoardCardItemProps) => <BoardCardItem {...board}/>)  }
+                <NewBoard key={'new-board'} onClick={onCreateBoard} disabled={boardCreating}/>
+                { boards.map((board: IBoardCardItemProps) => <BoardCardItem key={board._id} {...board} disableEvents={boardDeleting} onBoardDelete={deleteBoard}/>)  }
             </div>
         </div>
     )

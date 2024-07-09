@@ -28,7 +28,7 @@ export const SearchInput = () => {
             skipNull: true
         })
         router.replace(url)
-    },[debouncedValue, router])
+    }, [debouncedValue, router])
 
     return (
         <div className="w-full relative flex flex-row items-center">
