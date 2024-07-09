@@ -2,11 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { EmptyResult } from "./empty-result";
-import { useAxios } from "@/lib/hooks/axios.hook";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { BoardCardItem, IBoardCardItemProps } from "./board-card";
 import NewBoard from "./new-board";
 import { toast } from "sonner";
+import { TBoardContext, useBoardContext } from "@/providers/boards-provider";
 
 interface BoardListProps {
     organizationId: string;
@@ -20,54 +20,19 @@ export const BoardList = ({
     organizationId,
     query
 }: BoardListProps) => {
-    const { fetchData: fetchBoardsData, loading: boardsLoading, response: boardsResponse } = useAxios();
-    const { fetchData: fetchCreateBoardData, loading: boardCreating } = useAxios();
-    const { fetchData: deleteBoardData, loading: boardDeleting } = useAxios();
-    const [boards, setBoards] = useState<any>(null);
-    const placeholders = [].constructor(10).fill(0).map((_: number, index: number) => `./placeholders/${index+1}.svg`)
-    
-    const onCreateBoard = async () => {
-        await fetchCreateBoardData({
-            url: 'miracle-organization/create-board',
-            method: 'POST',
-            params: { 
-                organizationId,
-                imageUrl: placeholders[Math.floor(Math.random()*placeholders.length)]
-            }
-        })
-        toast.success('Board created!')
-        await getBoards();
-    }
-
-    const getBoards = async () => {
-        await fetchBoardsData({
-            url: 'miracle-organization/boards',
-            method: 'GET',
-            params: { organizationId }
-        })
-    }
-
-    const deleteBoard = async (boardId: string) => {
-        await deleteBoardData({
-            url: 'miracle-organization/delete-board',
-            method: 'POST',
-            params: { boardId }
-        })
-        toast.success('Board deleted!')
-        await getBoards()
-    }
+    const { 
+        setOrganizationId,
+        boards,
+        boardsLoading, 
+        boardCreating,
+        onCreateBoard,
+        boardDeleting,
+        onDeleteBoard,
+    } : TBoardContext = useBoardContext();
 
     useEffect(() => {
-        if(boardsResponse?.data?.length) {
-            setBoards(boardsResponse.data);
-        } else {
-            setBoards([])
-        }
-    }, [boardsResponse])
-
-    useEffect(() => {
-        getBoards();
-    }, [])
+        setOrganizationId(organizationId);
+    }, [organizationId])
 
     if(boardsLoading) {
         return (
@@ -109,7 +74,7 @@ export const BoardList = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 py-4
             flex-1 basis-0 min-h-0 overflow-auto">
                 <NewBoard key={'new-board'} onClick={onCreateBoard} disabled={boardCreating}/>
-                { boards.map((board: IBoardCardItemProps) => <BoardCardItem key={board._id} {...board} disableEvents={boardDeleting} onBoardDelete={deleteBoard}/>)  }
+                { boards.map((board: IBoardCardItemProps) => <BoardCardItem key={board._id} {...board} disableEvents={boardDeleting} onBoardDelete={onDeleteBoard}/>)  }
             </div>
         </div>
     )

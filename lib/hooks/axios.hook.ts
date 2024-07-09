@@ -9,17 +9,19 @@ interface APIProps {
     params?: any
 }
 
+export type IAxiosResponse = {
+    data: any,
+    success: boolean,
+    message: string,
+    showPopUp: boolean,
+    code: number,
+    responseType: 'Error' | 'Information' | 'Question' | 'Warning' | 'Success',
+} | null | any
+
 export const useAxios = () => {
     const { getToken } = useAuth()
 
-    const [response, setResponse] = useState<{
-        data: any,
-        success: boolean,
-        message: string,
-        showPopUp: boolean,
-        code: number,
-        responseType: 'Error' | 'Information' | 'Question' | 'Warning' | 'Success',
-    } | null>(null);
+    const [response, setResponse] = useState<IAxiosResponse>(null);
 
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);

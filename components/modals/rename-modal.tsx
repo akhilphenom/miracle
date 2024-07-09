@@ -7,14 +7,16 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { useAxios } from '@/lib/hooks/axios.hook';
 import { toast } from 'sonner';
+import { useBoardContext } from '@/providers/boards-provider';
 
 export default function RenameModal() {
     const { fetchData: renameBoard, loading: renamingBoard } = useAxios();
     const { isOpen, onClose, initialValues } = useRenameModal();
+    const { refreshBoards } = useBoardContext();
     const [title, setTitle] = useState(initialValues.title);
 
     useEffect(() => {
-        setTitle(title => initialValues.title)
+        setTitle(initialValues.title)
     }, [initialValues.title])
 
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -26,6 +28,7 @@ export default function RenameModal() {
                 params: { _id: initialValues._id, title }
             })
             toast.success('Successfully updated');
+            refreshBoards();
             onClose();
         } catch(err) {
             toast.error('Internal error')
