@@ -28,11 +28,16 @@ export const BoardList = ({
         onCreateBoard,
         boardDeleting,
         onDeleteBoard,
+        refreshBoards
     } : TBoardContext = useBoardContext();
 
     useEffect(() => {
         setOrganizationId(organizationId);
     }, [organizationId])
+
+    useEffect(() => {
+        refreshBoards();
+    }, [])
 
     if(boardsLoading) {
         return (

@@ -7,7 +7,7 @@ interface BoardFooterProps {
     authorLabel: string,
     createdAtLabel: string,
     isFavourite: boolean,
-    onClick: () => void,
+    toggleFavourite: () => void,
     disabled: boolean
 }
 
@@ -22,7 +22,7 @@ const Details = (
 }
 
 export default function BoardFooter({
-    title, authorLabel, createdAtLabel, isFavourite, onClick, disabled
+    title, authorLabel, createdAtLabel, isFavourite, toggleFavourite, disabled
 } : BoardFooterProps) {
   return (
     <div className='p-3 relative'>
@@ -34,7 +34,7 @@ export default function BoardFooter({
         disabled={disabled}
         onClick={(e) => {
             e.stopPropagation();
-            onClick();
+            toggleFavourite();
         }}
         className={
             cn(

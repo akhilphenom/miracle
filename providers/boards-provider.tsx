@@ -13,6 +13,7 @@ export type TBoardContext = {
     refreshBoards: () => void,
     onCreateBoard: () => void,
     onDeleteBoard: (_id: string) => void
+    toggleFavourite: (_id: string) => void
 }
 
 const BoardContext = createContext({
@@ -24,6 +25,7 @@ const BoardContext = createContext({
     onCreateBoard: () => {},
     onDeleteBoard: (_id: string) => {},
     refreshBoards: () => {},
+    toggleFavourite: (_id: string) => {}
 });
 
 export const useBoardContext = () => {
@@ -38,6 +40,7 @@ export default function BoardsProvider ({
     const { fetchData: fetchBoardsData, loading: boardsLoading, response: boardsResponse } = useAxios();
     const { fetchData: fetchCreateBoardData, loading: boardCreating } = useAxios();
     const { fetchData: deleteBoardData, loading: boardDeleting } = useAxios();
+    const { fetchData: toggleBoardFavourite } = useAxios();
 
     const placeholders = [].constructor(10).fill(0).map((_: number, index: number) => `./placeholders/${index + 1}.svg`)
 
@@ -79,6 +82,15 @@ export default function BoardsProvider ({
         await getBoards()
     }
 
+    const toggleFavourite = async (boardId: string) => {
+        await toggleBoardFavourite({
+            url: 'miracle-organization/toggle-favourite',
+            method: 'POST',
+            params: { boardId }
+        })
+        await getBoards()
+    }
+
     useEffect(() => {
         if (boardsResponse?.data?.length) {
             setBoards(boardsResponse.data);
@@ -91,6 +103,10 @@ export default function BoardsProvider ({
         getBoards();
     }, [organizationId])
 
+    useEffect(() => {
+        getBoards();
+    }, [])
+
     return (
         <BoardContext.Provider
             value={{
@@ -102,6 +118,7 @@ export default function BoardsProvider ({
                 onDeleteBoard,
                 refreshBoards: getBoards,
                 setOrganizationId: setOrganization,
+                toggleFavourite
             }}
         >
             {children}

@@ -7,6 +7,7 @@ import Footer from "./footer";
 import { Skeleton } from "@/components/ui/skeleton";
 import Actions from "@/components/actions";
 import { MoreHorizontal } from "lucide-react";
+import { useBoardContext } from "@/providers/boards-provider";
 
 export interface IBoardCardItemProps extends Document {
     _id: string,
@@ -28,6 +29,7 @@ export const BoardCardItem = ({
     _id, title, organizationId, disableEvents, favourite, imageUrl, authorId, authorName, createdAt, onBoardDelete
 }: IBoardCardItemProps) => {
     const { userId } = useAuth();
+    const { toggleFavourite } = useBoardContext();
     const authorLabel = userId == authorId? 'You' : authorName;
     const createdAtLabel = formatDistanceToNow(createdAt, {
         addSuffix: true
@@ -60,7 +62,7 @@ export const BoardCardItem = ({
             title={title}
             authorLabel={authorLabel}
             createdAtLabel={createdAtLabel}
-            onClick={()=>{}}
+            toggleFavourite={() => toggleFavourite(_id)}
             disabled={false}
             />
         </div>
