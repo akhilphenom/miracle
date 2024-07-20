@@ -1,6 +1,7 @@
 "use client";
 
 import { useAxios } from '@/lib/hooks/axios.hook';
+import { useAuth } from '@clerk/nextjs';
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { toast } from 'sonner';
 
@@ -37,6 +38,7 @@ export default function BoardsProvider ({
 }: {
     children: React.ReactNode
 }) {
+    const { userId, orgId } = useAuth();
     const { fetchData: fetchBoardsData, loading: boardsLoading, response: boardsResponse } = useAxios();
     const { fetchData: fetchCreateBoardData, loading: boardCreating } = useAxios();
     const { fetchData: deleteBoardData, loading: boardDeleting } = useAxios();
@@ -55,7 +57,7 @@ export default function BoardsProvider ({
         await fetchBoardsData({
             url: 'miracle-organization/boards',
             method: 'GET',
-            params: { organizationId }
+            params: { organizationId, userId }
         })
     }
 
@@ -86,7 +88,7 @@ export default function BoardsProvider ({
         await toggleBoardFavourite({
             url: 'miracle-organization/toggle-favourite',
             method: 'POST',
-            params: { boardId }
+            params: { boardId, userId }
         })
         await getBoards()
     }

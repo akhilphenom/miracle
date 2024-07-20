@@ -5,7 +5,6 @@ import { EmptyResult } from "./empty-result";
 import { useEffect } from "react";
 import { BoardCardItem, IBoardCardItemProps } from "./board-card";
 import NewBoard from "./new-board";
-import { toast } from "sonner";
 import { TBoardContext, useBoardContext } from "@/providers/boards-provider";
 
 interface BoardListProps {
