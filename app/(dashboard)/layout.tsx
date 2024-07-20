@@ -1,3 +1,4 @@
+import BoardsProvider from "@/providers/boards-provider"
 import { Navbar } from "./_components/navbar"
 import { OrganizationSidebar } from "./_components/organization-sidebar"
 import { Sidebar } from "./_components/sidebar"
@@ -31,11 +32,13 @@ export default function ({children}: DashboardLayoutProps) {
                 <Sidebar/>
                 <div className="pl-[60px] h-full">
                     <div className="flex h-full gap-x-3">
-                        <OrganizationSidebar/>
-                        <div className="h-full flex-1 flex flex-col">
-                            <Navbar/>
-                            {children}
-                        </div>
+                        <BoardsProvider>
+                            <OrganizationSidebar/>
+                            <div className="h-full flex-1 flex flex-col">
+                                <Navbar/>
+                                {children}
+                            </div>
+                        </BoardsProvider>
                     </div>
                 </div>
             </main>

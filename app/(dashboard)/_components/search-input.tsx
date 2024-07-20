@@ -6,13 +6,13 @@ import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useDebounceValue } from "usehooks-ts";
 import queryString from "query-string";
-import { useAxios } from "@/lib/hooks/axios.hook";
+import { useBoardContext } from "@/providers/boards-provider";
 
 export const SearchInput = () => {
-    const { fetchData } = useAxios();
     const router = useRouter();
+    const { setSearch } = useBoardContext();
     const [value, setValue] = useState('');
-    const [debouncedValue] = useDebounceValue(value, 100);
+    const [debouncedValue] = useDebounceValue(value, 200);
     const onChange = (e: ChangeEvent<HTMLInputElement>) => {
         setValue(e.target.value)
     }
@@ -28,6 +28,7 @@ export const SearchInput = () => {
             skipNull: true
         })
         router.replace(url)
+        setSearch(value)
     }, [debouncedValue, router])
 
     return (

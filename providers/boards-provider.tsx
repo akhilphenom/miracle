@@ -15,6 +15,8 @@ export type TBoardContext = {
     onCreateBoard: () => void,
     onDeleteBoard: (_id: string) => void
     toggleFavourite: (_id: string) => void
+    setFavourites: (value: boolean) => void
+    setSearch: (value: string) => void
 }
 
 const BoardContext = createContext({
@@ -26,7 +28,9 @@ const BoardContext = createContext({
     onCreateBoard: () => {},
     onDeleteBoard: (_id: string) => {},
     refreshBoards: () => {},
-    toggleFavourite: (_id: string) => {}
+    toggleFavourite: (_id: string) => {},
+    setFavourites: (value: boolean) => {},
+    setSearch: (value: string) => {}
 });
 
 export const useBoardContext = () => {
@@ -39,6 +43,8 @@ export default function BoardsProvider ({
     children: React.ReactNode
 }) {
     const { userId, orgId } = useAuth();
+    const [searchValue, setSearchValue] = useState('');
+    const [favouritesOnly, setFavouritesOnly] = useState(false);
     const { fetchData: fetchBoardsData, loading: boardsLoading, response: boardsResponse } = useAxios();
     const { fetchData: fetchCreateBoardData, loading: boardCreating } = useAxios();
     const { fetchData: deleteBoardData, loading: boardDeleting } = useAxios();
@@ -57,7 +63,7 @@ export default function BoardsProvider ({
         await fetchBoardsData({
             url: 'miracle-organization/boards',
             method: 'GET',
-            params: { organizationId, userId }
+            params: { organizationId, userId, favouritesOnly, searchValue }
         })
     }
 
@@ -93,6 +99,14 @@ export default function BoardsProvider ({
         await getBoards()
     }
 
+    const setSearch = async (value: string) => {    
+        setSearchValue(value)
+    }
+
+    const setFavourites = async (value: boolean) => {    
+        setFavouritesOnly(value)
+    }
+
     useEffect(() => {
         if (boardsResponse?.data?.length) {
             setBoards(boardsResponse.data);
@@ -103,7 +117,7 @@ export default function BoardsProvider ({
 
     useEffect(() => {
         getBoards();
-    }, [organizationId])
+    }, [organizationId, favouritesOnly, searchValue])
 
     useEffect(() => {
         getBoards();
@@ -120,7 +134,9 @@ export default function BoardsProvider ({
                 onDeleteBoard,
                 refreshBoards: getBoards,
                 setOrganizationId: setOrganization,
-                toggleFavourite
+                toggleFavourite,
+                setFavourites,
+                setSearch
             }}
         >
             {children}

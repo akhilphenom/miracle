@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useBoardContext } from "@/providers/boards-provider";
 import { OrganizationSwitcher } from "@clerk/nextjs";
 import { LayoutDashboard, Star } from "lucide-react";
 import { Poppins } from "next/font/google";
@@ -16,6 +17,7 @@ const font = Poppins({
 export const OrganizationSidebar = () => {
     const searchParams = useSearchParams();
     const favourites = searchParams.get('favourites');
+    const { setFavourites } = useBoardContext();
     
     return (
         <div className="hidden lg:flex flex-col space-y-6 pl-[2rem] pr-[0.5rem] pt-5 w-[300px]">
@@ -60,14 +62,14 @@ export const OrganizationSidebar = () => {
             }}
             />
             <div className="space-y-1 w-full">
-                <Button asChild size={'default'} className="w-full justify-start" variant={ favourites? 'ghost' : 'secondary'}>
+                <Button asChild size={'default'} className="w-full justify-start" variant={ favourites? 'ghost' : 'secondary' } onClick={() => setFavourites(false)}>
                     <Link href={"/"}>
                         <LayoutDashboard className="m-2 h-4"/>
                         Team Boards
                     </Link>
                 </Button>
                 <Button asChild size={'default'} className="w-full justify-start" variant={ !favourites? 'ghost' : 'secondary'}>
-                    <Link href={{pathname: '/', query: { favourites: true }}}>
+                    <Link href={{pathname: '/', query: { favourites: true }}} onClick={() => setFavourites(true)}>
                         <Star className="m-2 h-4"/>
                         Favourite Boards
                     </Link>
