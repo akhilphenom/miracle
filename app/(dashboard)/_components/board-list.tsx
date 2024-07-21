@@ -6,6 +6,10 @@ import { useEffect } from "react";
 import { BoardCardItem, IBoardCardItemProps } from "./board-card";
 import NewBoard from "./new-board";
 import { TBoardContext, useBoardContext } from "@/providers/boards-provider";
+import { Switch } from "@/components/ui/switch";
+import { Toggle } from "@/components/ui/toggle";
+import Link from "next/link";
+import { Star } from "lucide-react";
 
 interface BoardListProps {
     organizationId: string;
@@ -27,8 +31,17 @@ export const BoardList = ({
         onCreateBoard,
         boardDeleting,
         onDeleteBoard,
-        refreshBoards
+        refreshBoards,
+        setFavourites
     } : TBoardContext = useBoardContext();
+
+    const handleToggleFavourite = () => {
+        if(query.favourites) {
+            setFavourites(false)
+        } else {
+            setFavourites(true)
+        }
+    }
 
     useEffect(() => {
         setOrganizationId(organizationId);
@@ -41,7 +54,7 @@ export const BoardList = ({
     if(boardsLoading) {
         return (
             <div className="w-full h-full flex flex-col gap-3">
-                <p className="text-3xl">{ query.favourites ? "Favourite Boards": "Team Boards" }</p>
+                <p className="text-3xl">{ query.favourites ? "Favourite Boards": "White Boards" }</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 py-4
                 flex-1 basis-0 min-h-0 overflow-auto">
                     <NewBoard onClick={onCreateBoard} disabled={boardCreating}/>
@@ -74,7 +87,19 @@ export const BoardList = ({
     
     return (
         <div className="w-full h-full flex flex-col gap-3">
-            <p className="text-3xl">{ query.favourites ? "Favourite Boards": "Team Boards" }</p>
+            <div className="flex flex-row justify-between items-center">
+                <p className="text-3xl">{ query.favourites ? "Favourite Boards": "White Boards" }</p>
+                <Toggle pressed={ query.favourites ? true : false }>
+                    <Link href={{
+                        pathname: '/', ...(!query.favourites? { query: { favourites: true } } : {})
+                    }} 
+                    onClick={handleToggleFavourite} 
+                    className="flex flex-row items-center justify-center">
+                        <Star className="mr-2 h-4"/>
+                        Favourite Boards
+                    </Link>
+                </Toggle>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 py-4
             flex-1 basis-0 min-h-0 overflow-auto">
                 <NewBoard key={'new-board'} onClick={onCreateBoard} disabled={boardCreating}/>

@@ -65,13 +65,7 @@ export const OrganizationSidebar = () => {
                 <Button asChild size={'default'} className="w-full justify-start" variant={ favourites? 'ghost' : 'secondary' } onClick={() => setFavourites(false)}>
                     <Link href={"/"}>
                         <LayoutDashboard className="m-2 h-4"/>
-                        Team Boards
-                    </Link>
-                </Button>
-                <Button asChild size={'default'} className="w-full justify-start" variant={ !favourites? 'ghost' : 'secondary'}>
-                    <Link href={{pathname: '/', query: { favourites: true }}} onClick={() => setFavourites(true)}>
-                        <Star className="m-2 h-4"/>
-                        Favourite Boards
+                        White Boards
                     </Link>
                 </Button>
             </div>

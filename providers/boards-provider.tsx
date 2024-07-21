@@ -42,7 +42,6 @@ export default function BoardsProvider ({
 }: {
     children: React.ReactNode
 }) {
-    const { userId, orgId } = useAuth();
     const [searchValue, setSearchValue] = useState('');
     const [favouritesOnly, setFavouritesOnly] = useState(false);
     const { fetchData: fetchBoardsData, loading: boardsLoading, response: boardsResponse } = useAxios();
@@ -63,7 +62,7 @@ export default function BoardsProvider ({
         await fetchBoardsData({
             url: 'miracle-organization/boards',
             method: 'GET',
-            params: { organizationId, userId, favouritesOnly, searchValue }
+            params: { organizationId, favouritesOnly, searchValue }
         })
     }
 
@@ -73,7 +72,8 @@ export default function BoardsProvider ({
             method: 'POST',
             params: {
                 organizationId,
-                imageUrl: placeholders[Math.floor(Math.random() * placeholders.length)]
+                imageUrl: placeholders[Math.floor(Math.random() * placeholders.length)],
+                favouritesOnly
             }
         })
         toast.success('Board created!')
@@ -94,7 +94,7 @@ export default function BoardsProvider ({
         await toggleBoardFavourite({
             url: 'miracle-organization/toggle-favourite',
             method: 'POST',
-            params: { boardId, userId }
+            params: { boardId }
         })
         await getBoards()
     }
