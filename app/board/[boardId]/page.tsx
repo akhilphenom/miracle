@@ -1,5 +1,6 @@
 import React from 'react'
 import CanvasComponent from './_components/canvas'
+import WhiteboardRoom from '@/components/whiteboard-room'
 
 interface BoardIDPageProps {
     params: {
@@ -11,7 +12,9 @@ function BoardIDPage({
     params: { boardId }
 }: BoardIDPageProps) {
     return (
-        <CanvasComponent boardId={boardId}/>
+        <WhiteboardRoom roomId={boardId}>
+            <CanvasComponent boardId={boardId}/>
+        </WhiteboardRoom>
     )
 }
 
