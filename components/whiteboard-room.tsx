@@ -5,17 +5,19 @@ import { ClientSideSuspense, LiveblocksProvider, RoomProvider } from '@liveblock
 
 interface WhiteboardRoomProps {
     children?: React.ReactNode
-    roomId: string
+    roomId: string,
+    fallback: React.ReactNode
 }
 
 function WhiteboardRoom ({
     children,
-    roomId
+    roomId,
+    fallback
 }: WhiteboardRoomProps) {
     return (
         <LiveblocksProvider publicApiKey={"pk_dev_n-0mNZWF2tM4ywB-OURnL_JwatoLq4Wn8_cMNuEw_bRRxveODJEhkUkver7t8rnv"}>
             <RoomProvider id={roomId} initialPresence={{}}>
-                <ClientSideSuspense fallback={<div>Loading…</div>}>
+                <ClientSideSuspense fallback={fallback}>
                     {children}
                 </ClientSideSuspense>
             </RoomProvider>
