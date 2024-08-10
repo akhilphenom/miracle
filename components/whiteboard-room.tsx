@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { ClientSideSuspense, LiveblocksProvider, RoomProvider } from '@liveblocks/react';
+import { useAxios } from '@/lib/hooks/axios.hook';
 
 interface WhiteboardRoomProps {
     children?: React.ReactNode
@@ -14,13 +15,29 @@ function WhiteboardRoom ({
     roomId,
     fallback
 }: WhiteboardRoomProps) {
+    const { fetchData, loading, response } = useAxios();
+    
+    const authEndpoint = async (room: any) => {
+        await fetchData({
+            url: 'liveblocks/miracle',
+            method: 'POST',
+            data: { room },
+            params: { room },
+        })
+        return response.success ? JSON.parse(response.data) : { token: undefined }
+    };
+
     return (
-        <LiveblocksProvider publicApiKey={"pk_dev_n-0mNZWF2tM4ywB-OURnL_JwatoLq4Wn8_cMNuEw_bRRxveODJEhkUkver7t8rnv"}>
+        <LiveblocksProvider authEndpoint={authEndpoint}>
             <RoomProvider id={roomId} initialPresence={{}}>
+            {
+                response?.success ?
                 <ClientSideSuspense fallback={fallback}>
                     {children}
                 </ClientSideSuspense>
-            </RoomProvider>
+                : fallback
+            }
+                </RoomProvider> 
         </LiveblocksProvider>
     )
 }

@@ -1,11 +1,10 @@
-// Define Liveblocks types for your application
-// https://liveblocks.io/docs/api-reference/liveblocks-react#Typing-your-data
 import { createClient } from '@liveblocks/client'
-import { createRoomContext } from '@liveblocks/react'
 
-export const liveblocksClient = createClient({
-  publicApiKey: 'pk_dev_n-0mNZWF2tM4ywB-OURnL_JwatoLq4Wn8_cMNuEw_bRRxveODJEhkUkver7t8rnv'
-})
+export const liveblocksClient = createClient({ 
+  publicApiKey: process.env.LIVEBLOCKS_MIRACLE_PUBLIC_KEY || '' 
+});
+
+export type ILiveblocksUserInfo = Liveblocks['UserMeta']['info']
 
 declare global {
   interface Liveblocks {
@@ -26,8 +25,8 @@ declare global {
       id: string;
       info: {
         // Example properties, for useSelf, useUser, useOthers, etc.
-        // name: string;
-        // avatar: string;
+        name: string;
+        avatar: string;
       };
     };
 
