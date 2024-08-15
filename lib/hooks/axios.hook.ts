@@ -41,9 +41,9 @@ export const useAxios = () => {
 
     let controller = new AbortController();
 
-    useEffect(() => {
-        return () => controller?.abort();
-    }, [])
+    // useEffect(() => {
+    //     return () => controller?.abort();
+    // }, [])
 
     const fetchData = async ({
         url,

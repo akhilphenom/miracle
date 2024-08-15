@@ -8,7 +8,7 @@ function Participants() {
     </div>
   )
 }
-Participants.Skeleton = () => (
+export const ParticipantsSkeleton = () => (
   <div className='shadow-md bg-white absolute top-3 right-3 text-sm rounded-md w-[300px] h-[40px]'>
     <Skeleton className='h-full w-full bg-muted-foreground'/>
   </div>
