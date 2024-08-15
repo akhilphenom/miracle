@@ -24,7 +24,7 @@ function WhiteboardRoom ({
             data: { room },
             params: { room },
         })
-        return response.success ? JSON.parse(response.data) : { token: undefined }
+        return response?.success ? JSON.parse(response.data) : { token: undefined }
     };
 
     return (

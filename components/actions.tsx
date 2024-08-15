@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from 'react'
+import React from 'react'
 import { DropdownMenuContentProps } from "@radix-ui/react-dropdown-menu";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { Link2, Pencil, Trash2 } from 'lucide-react';
@@ -8,7 +8,6 @@ import { toast } from 'sonner';
 import ConfirmationModal from './confirmation-modal';
 import { Button } from './ui/button';
 import { useRenameModal } from '@/store/use-rename-modal';
-import { useBoardContext } from '@/providers/boards-provider';
 
 interface ActionProps {
     children: React.ReactNode;

@@ -41,9 +41,9 @@ export const useAxios = () => {
 
     let controller = new AbortController();
 
-    // useEffect(() => {
-    //     return () => controller?.abort();
-    // }, [])
+    useEffect(() => {
+        return () => loading ? controller?.abort() : undefined;
+    }, [])
 
     const fetchData = async ({
         url,

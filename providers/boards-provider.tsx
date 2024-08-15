@@ -1,17 +1,19 @@
 "use client";
 
 import { useAxios } from '@/lib/hooks/axios.hook';
-import { useAuth } from '@clerk/nextjs';
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { toast } from 'sonner';
 
 export type TBoardContext = {
     setOrganizationId: (_id: string) => void,
+    board: null,
     boards: any
+    boardLoading: boolean,
     boardsLoading: boolean,
     boardCreating: boolean,
     boardDeleting: boolean,
     refreshBoards: () => void,
+    getBoard: (_id: string) => void,
     onCreateBoard: () => void,
     onDeleteBoard: (_id: string) => void
     toggleFavourite: (_id: string) => void
@@ -21,10 +23,13 @@ export type TBoardContext = {
 
 const BoardContext = createContext({
     setOrganizationId: (_id: string) => {},
+    board: null,
     boards: null,
+    boardLoading: true,
     boardsLoading: true,
     boardCreating: true,
     boardDeleting: true,
+    getBoard: (_id: string) => {},
     onCreateBoard: () => {},
     onDeleteBoard: (_id: string) => {},
     refreshBoards: () => {},
@@ -44,6 +49,7 @@ export default function BoardsProvider ({
 }) {
     const [searchValue, setSearchValue] = useState('');
     const [favouritesOnly, setFavouritesOnly] = useState(false);
+    const { fetchData: fetchBoardData, loading: boardLoading, response: boardResponse } = useAxios();
     const { fetchData: fetchBoardsData, loading: boardsLoading, response: boardsResponse } = useAxios();
     const { fetchData: fetchCreateBoardData, loading: boardCreating } = useAxios();
     const { fetchData: deleteBoardData, loading: boardDeleting } = useAxios();
@@ -51,11 +57,20 @@ export default function BoardsProvider ({
 
     const placeholders = [].constructor(10).fill(0).map((_: number, index: number) => `./placeholders/${index + 1}.svg`)
 
+    const [board, setBoard] = useState<any>(null);
     const [boards, setBoards] = useState<any>(null);
     const [organizationId, setOrganizationId] = useState<string>();
 
     const setOrganization = (_id: string) => {
         setOrganizationId(_id)
+    }
+
+    const getBoard = async (boardId: string) => {
+        await fetchBoardData({
+            url: 'miracle-organization/board',
+            method: 'GET',
+            params: { _id: boardId }
+        })
     }
 
     const getBoards = async () => {
@@ -116,6 +131,14 @@ export default function BoardsProvider ({
     }, [boardsResponse])
 
     useEffect(() => {
+        if (boardResponse?.data) {
+            setBoard(boardResponse.data);
+        } else {
+            setBoard([])
+        }
+    }, [boardResponse])
+
+    useEffect(() => {
         getBoards();
     }, [organizationId, favouritesOnly, searchValue])
 
@@ -126,11 +149,14 @@ export default function BoardsProvider ({
     return (
         <BoardContext.Provider
             value={{
+                board,
                 boards,
+                boardLoading,
                 boardsLoading,
                 boardCreating,
                 boardDeleting,
                 onCreateBoard,
+                getBoard,
                 onDeleteBoard,
                 refreshBoards: getBoards,
                 setOrganizationId: setOrganization,
