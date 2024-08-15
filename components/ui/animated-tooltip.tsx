@@ -10,13 +10,15 @@ import {
 } from "framer-motion";
 import { cn } from "@/lib/utils";
 
+type IItem = {
+  _id: string;
+  name: string;
+  designation: string;
+  avatar?: string;
+}
+
 type IAnimatedTooltipProps = {
-  items: {
-    _id: string;
-    name: string;
-    designation: string;
-    avatar?: string;
-  }[],
+  items: IItem[],
   height?: number,
   width?: number
 }
@@ -41,14 +43,19 @@ export const AnimatedTooltip = ({ items, height, width }: IAnimatedTooltipProps)
   };
 
   const pickRandomColor = () => {
-    const colors = ['!bg-[#921A40]', '!bg-[#1F316F]', '!bg-[#674188]', '!bg-[#982B1C]', '!bg-[#00712D]']
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
-    return colors[0];
+    const colors = ['!bg-[#009FBD]','!bg-[#921A40]', '!bg-[#1F316F]', '!bg-[#674188]', '!bg-[#982B1C]', '!bg-[#00712D]']
+    return colors[Math.floor(Math.random() * colors.length)];
   }
+
+  const [icons, setIcons] = useState<(IItem & {backgroundColor: string})[]>(
+    items.map(item => ({
+      ...item, backgroundColor: pickRandomColor(),
+    }))
+  )
 
   return (
     <>
-      {items.map((item, idx) => (
+      {icons.map((item, idx) => (
         <div
           className="-mr-4  relative group"
           key={item.name}
@@ -105,7 +112,7 @@ export const AnimatedTooltip = ({ items, height, width }: IAnimatedTooltipProps)
               cn(
                 "rounded-full h-14 w-[40px] border-2 group-hover:scale-105 group-hover:z-30 border-white  relative transition duration-500 flex items-center justify-center",
                 height && `h-[${height}px]`,
-                pickRandomColor()
+                `${item.backgroundColor}`
               )
             }>
               <p className="text-white">{item.name?.charAt(0)}</p>
