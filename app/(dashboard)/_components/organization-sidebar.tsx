@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useBoardContext } from "@/providers/boards-provider";
 import { OrganizationSwitcher } from "@clerk/nextjs";
-import { LayoutDashboard, Star } from "lucide-react";
+import { LayoutDashboard } from "lucide-react";
 import { Poppins } from "next/font/google";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";

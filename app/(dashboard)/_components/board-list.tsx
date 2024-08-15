@@ -6,7 +6,6 @@ import { useEffect } from "react";
 import { BoardCardItem, IBoardCardItemProps } from "./board-card";
 import NewBoard from "./new-board";
 import { TBoardContext, useBoardContext } from "@/providers/boards-provider";
-import { Switch } from "@/components/ui/switch";
 import { Toggle } from "@/components/ui/toggle";
 import Link from "next/link";
 import { Star } from "lucide-react";
@@ -48,7 +47,7 @@ export const BoardList = ({
     }, [organizationId])
 
     useEffect(() => {
-        refreshBoards();
+        organizationId && refreshBoards()
     }, [])
 
     if(boardsLoading) {

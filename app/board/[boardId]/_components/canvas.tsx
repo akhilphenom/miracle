@@ -6,6 +6,7 @@ import Participants from './participants'
 import ToolBar from './toolbar'
 import { CanvasMode, CanvasState } from '@/lib/types/canvas.types'
 import { useCanRedo, useCanUndo, useHistory } from '@liveblocks/react'
+import CursorsPresence from './cursors-presence'
 
 interface CanvasProps {
   boardId: string
@@ -33,6 +34,11 @@ function CanvasComponent ({
         canRedo={canRedo} canUndo={canUndo} 
         undo={undo} redo={redo}
         />
+        <svg className='h-dvh w-dvw'>
+          <g>
+            <CursorsPresence/>
+          </g>
+        </svg>
     </main>
   )
 }

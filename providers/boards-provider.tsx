@@ -139,11 +139,11 @@ export default function BoardsProvider ({
     }, [boardResponse])
 
     useEffect(() => {
-        getBoards();
+        organizationId && getBoards();
     }, [organizationId, favouritesOnly, searchValue])
 
     useEffect(() => {
-        getBoards();
+        organizationId && getBoards();
     }, [])
 
     return (

@@ -18,7 +18,7 @@ function ToolBar({
 }: IToolbarProps) {
   return (
     <div className='absolute top-[50%] -translate-y-[50%] left-3 text-sm flex flex-col gap-2'>
-      <div className='rounded-md bg-white p-1.5 flex flex-col items-center shadow-md'>
+      <div className='rounded-md bg-white p-1.5 flex flex-col items-center shadow-md gap-2'>
         <ToolButton 
         label='Select'
         icon={MousePointer2}
@@ -80,7 +80,7 @@ function ToolBar({
         isDisabled={false}
         />
       </div>
-      <div className='rounded-md bg-white p-1.5 flex flex-col items-center shadow-md'>
+      <div className='rounded-md bg-white p-1.5 flex flex-col items-center shadow-md gap-2'>
         <ToolButton 
         label='Undo'
         icon={Undo2}
