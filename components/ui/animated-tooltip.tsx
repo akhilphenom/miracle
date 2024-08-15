@@ -9,6 +9,7 @@ import {
   useSpring,
 } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { MAX_USERS } from "@/app/board/[boardId]/_components/participants";
 
 export type IItem = {
   _id: string;
@@ -89,7 +90,7 @@ export const AnimatedTooltip = ({ items, height, width }: IAnimatedTooltipProps)
                 <div className="absolute inset-x-10 z-30 w-[20%] -bottom-px bg-gradient-to-r from-transparent via-emerald-500 to-transparent h-px " />
                 <div className="absolute left-10 w-[40%] z-30 -bottom-px bg-gradient-to-r from-transparent via-sky-500 to-transparent h-px " />
                 <div className="font-bold text-white relative z-30 text-xs">
-                  {item.name}
+                  {item.designation?.length ? item.name : `${icons.length - 1 - MAX_USERS} More people`}
                 </div>
               </motion.div>
             )}
