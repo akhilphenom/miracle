@@ -6,7 +6,7 @@ import Participants from './participants'
 import ToolBar from './toolbar'
 import { CanvasMode, CanvasState } from '@/lib/types/canvas.types'
 import { useCanRedo, useCanUndo, useHistory } from '@liveblocks/react'
-import { CursorsPresence } from './cursors-presence'
+import PanzoomSVG from './panzoom-svg'
 
 interface CanvasProps {
   boardId: string
@@ -17,7 +17,6 @@ function CanvasComponent ({
 }: CanvasProps) {
   const [canvasState, setCanvasState] = useState<CanvasState>({
     mode: CanvasMode.None,
-
   })
 
   const { undo, redo } = useHistory();
@@ -34,11 +33,7 @@ function CanvasComponent ({
         canRedo={canRedo} canUndo={canUndo} 
         undo={undo} redo={redo}
         />
-        <svg className='h-[100vh] w-[100vw]'>
-          <g>
-            <CursorsPresence/>
-          </g>
-        </svg>
+        <PanzoomSVG width={100000} height={100000}/>
     </main>
   )
 }
