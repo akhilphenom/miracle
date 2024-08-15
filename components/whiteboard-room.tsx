@@ -29,7 +29,11 @@ function WhiteboardRoom ({
 
     return (
         <LiveblocksProvider authEndpoint={authEndpoint}>
-            <RoomProvider id={roomId} initialPresence={{}}>
+            <RoomProvider id={roomId} initialPresence={{
+                cursor: {
+                    x: 0, y: 0
+                }
+            }}>
             {
                 response?.success ?
                 <ClientSideSuspense fallback={fallback}>

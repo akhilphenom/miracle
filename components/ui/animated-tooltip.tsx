@@ -8,7 +8,7 @@ import {
   useMotionValue,
   useSpring,
 } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { cn, pickRandomColor } from "@/lib/utils";
 import { MAX_USERS } from "@/app/board/[boardId]/_components/participants";
 
 export type IItem = {
@@ -43,16 +43,11 @@ export const AnimatedTooltip = ({ items, height, width }: IAnimatedTooltipProps)
     x.set(event.nativeEvent.offsetX - halfWidth); // set the x value, which is then used in transform and rotate
   };
 
-  const pickRandomColor = () => {
-    const colors = ['!bg-[#009FBD]','!bg-[#921A40]', '!bg-[#1F316F]', '!bg-[#674188]', '!bg-[#982B1C]', '!bg-[#00712D]']
-    return colors[Math.floor(Math.random() * colors.length)];
-  }
-
   const [icons, setIcons] = useState<(IItem & {backgroundColor: string})[]>([])
 
   useEffect(() => {
     items && Array.isArray(items) && setIcons(items.map(item => ({
-      ...item, backgroundColor: pickRandomColor(),
+      ...item, backgroundColor: `bg-[${pickRandomColor()}]`,
     })))
   }, [items])
 
