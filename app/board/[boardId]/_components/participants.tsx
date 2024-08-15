@@ -1,29 +1,25 @@
 "use client";
 
 import { Skeleton } from '@/components/ui/skeleton'
-import React from 'react'
-import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
+import React, { useEffect, useState } from 'react'
+import { AnimatedTooltip, IItem } from "@/components/ui/animated-tooltip";
 import { useOthers, useSelf } from '@liveblocks/react';
-
-const people = [
-  {
-    _id: '1',
-    name: "John Doe",
-    designation: "Software Engineer",
-    avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3387&q=80",
-  },
-  {
-    _id: '2',
-    name: "Sai Akhil",
-    designation: "Software Engineer",
-  },
-];
 
 function Participants() {
   const users = useOthers();
   const currentUser = useSelf();
 
-  console.log(users, currentUser)
+  const [people, setPeople] = useState<IItem[]>([]);
+  
+  useEffect(() => {
+    if(users?.length) {
+      const people = users.slice(0, 5).map(({
+        canWrite, canComment, connectionId, id, info: { name, avatar }, presence
+      }) => ({ _id: id, name, avatar, designation: canWrite? 'Editor' : 'Viewer' }))
+      setPeople(people)
+    }
+  }, [users])
+  
   return (
     <div className='absolute bottom-3 right-[50%] translate-x-1/2'>
       <div className="flex flex-row items-center justify-center w-full">

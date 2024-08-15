@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   motion,
   useTransform,
@@ -10,7 +10,7 @@ import {
 } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-type IItem = {
+export type IItem = {
   _id: string;
   name: string;
   designation: string;
@@ -47,11 +47,13 @@ export const AnimatedTooltip = ({ items, height, width }: IAnimatedTooltipProps)
     return colors[Math.floor(Math.random() * colors.length)];
   }
 
-  const [icons, setIcons] = useState<(IItem & {backgroundColor: string})[]>(
-    items.map(item => ({
+  const [icons, setIcons] = useState<(IItem & {backgroundColor: string})[]>([])
+
+  useEffect(() => {
+    items && Array.isArray(items) && setIcons(items.map(item => ({
       ...item, backgroundColor: pickRandomColor(),
-    }))
-  )
+    })))
+  }, [items])
 
   return (
     <>
