@@ -30,7 +30,7 @@ export const Hint = ({
                     <p className={
                         cn(
                             'font-semibold capitalize text-xs',
-                            fontSize && `text-[${fontSize}px]`
+                            fontSize && `!text-[${fontSize}px]`
                         )
                     }>
                         {label}

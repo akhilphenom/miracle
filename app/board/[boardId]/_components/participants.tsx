@@ -7,16 +7,23 @@ import { useOthers, useSelf } from '@liveblocks/react';
 
 const people = [
   {
-    _id: 1,
+    _id: '1',
     name: "John Doe",
     designation: "Software Engineer",
-    image: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3387&q=80",
+    avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3387&q=80",
+  },
+  {
+    _id: '2',
+    name: "Sai Akhil",
+    designation: "Software Engineer",
   },
 ];
 
 function Participants() {
-  const {} = useOthers();
+  const users = useOthers();
+  const currentUser = useSelf();
 
+  console.log(users, currentUser)
   return (
     <div className='absolute bottom-3 right-[50%] translate-x-1/2'>
       <div className="flex flex-row items-center justify-center w-full">

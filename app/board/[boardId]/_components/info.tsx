@@ -4,13 +4,12 @@ import Actions from '@/components/actions';
 import { Hint } from '@/components/shared/hint';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton'
-import { useAxios } from '@/lib/hooks/axios.hook';
 import { useBoardContext } from '@/providers/boards-provider';
 import { useRenameModal } from '@/store/use-rename-modal';
 import { Menu } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 
 interface InfoProps {
   boardId: string

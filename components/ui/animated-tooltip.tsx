@@ -12,17 +12,17 @@ import { cn } from "@/lib/utils";
 
 type IAnimatedTooltipProps = {
   items: {
-    _id: number;
+    _id: string;
     name: string;
     designation: string;
-    image: string;
+    avatar?: string;
   }[],
   height?: number,
   width?: number
 }
 
 export const AnimatedTooltip = ({ items, height, width }: IAnimatedTooltipProps) => {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<string | null>(null);
   const springConfig = { stiffness: 100, damping: 5 };
   const x = useMotionValue(0); // going to set this value on mouse move
   // rotate the tooltip
@@ -39,6 +39,12 @@ export const AnimatedTooltip = ({ items, height, width }: IAnimatedTooltipProps)
     const halfWidth = event.target.offsetWidth / 2;
     x.set(event.nativeEvent.offsetX - halfWidth); // set the x value, which is then used in transform and rotate
   };
+
+  const pickRandomColor = () => {
+    const colors = ['!bg-[#921A40]', '!bg-[#1F316F]', '!bg-[#674188]', '!bg-[#982B1C]', '!bg-[#00712D]']
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    return colors[0];
+  }
 
   return (
     <>
@@ -79,11 +85,13 @@ export const AnimatedTooltip = ({ items, height, width }: IAnimatedTooltipProps)
               </motion.div>
             )}
           </AnimatePresence>
-          <Image
+          {
+            item.avatar?.length ?
+            <Image
             onMouseMove={handleMouseMove}
             height={40}
             width={40}
-            src={item.image}
+            src={item.avatar}
             alt={item.name}
             className={
               cn(
@@ -92,7 +100,17 @@ export const AnimatedTooltip = ({ items, height, width }: IAnimatedTooltipProps)
                 width && `w-[${width}px]`,
               )
             }
-          />
+            /> : 
+            <div className={
+              cn(
+                "rounded-full h-14 w-[40px] border-2 group-hover:scale-105 group-hover:z-30 border-white  relative transition duration-500 flex items-center justify-center",
+                height && `h-[${height}px]`,
+                pickRandomColor()
+              )
+            }>
+              <p className="text-white">{item.name?.charAt(0)}</p>
+            </div>
+          }
         </div>
       ))}
     </>
