@@ -5,7 +5,7 @@ import { PanZoom } from 'react-easy-panzoom'
 import { CursorsPresence } from './cursors-presence'
 import usePanzoomTransform from '@/store/panzoom.store'
 import { useMutation, useStorage } from '@liveblocks/react'
-import { CanvasMode, LayerType, Point } from '@/lib/types/canvas.types'
+import { CanvasMode, Point, ShapeLayerType } from '@/lib/types/canvas.types'
 import useCanvasStore from '@/store/canvas.store'
 import { v4 as uuid } from 'uuid';
 import { LiveObject } from '@liveblocks/client'
@@ -26,13 +26,13 @@ function PanzoomSVG({
     maxLayers
 }: IPanzoomSVGProps) {
     const { state, lastUsedColor, layerType, setCanvasState, setMode, setLayerType, setLastUsedColor } = useCanvasStore();
-    const { transform, setScale, setCoordinates, setAngle, updateTransform } = usePanzoomTransform()
+    const { transform, setScale, setCoordinates, setAngle, panPrevented, setPreventPan, updateTransform } = usePanzoomTransform()
 
     const layerIds = useStorage(({ layerIds }) => layerIds)
 
     const insertLayer = useMutation((
       { storage, setMyPresence }, 
-      layerType: LayerType.Ellipse | LayerType.Note | LayerType.Text | LayerType.Rectangle,
+      layerType: ShapeLayerType,
       position: Point
     ) => {
       const liveLayers = storage.get('layers')
@@ -73,12 +73,13 @@ function PanzoomSVG({
         e: React.PointerEvent
     )=>{
         const point: Point = getAbsoluteCoordinates(e)
+        console.log(point, state.mode, layerType)
         if(state.mode == CanvasMode.Inserting) {
-            insertLayer(layerType, point)
+            insertLayer(layerType as ShapeLayerType, point)
         } else {
             setCanvasState({ mode: CanvasMode.None })
         }
-    },[])
+    }, [transform.x, transform.y, transform.scale, state, layerType, insertLayer])
     
     const observeChanges = useCallback((e: PanzoomState) => {
         updateTransform(e)
@@ -95,6 +96,7 @@ function PanzoomSVG({
         >
             <svg 
             onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
             style={{ position: 'relative', width: `${width}px`, height: `${height}px` }}
             >
                 <g>

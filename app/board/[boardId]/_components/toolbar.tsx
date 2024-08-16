@@ -6,12 +6,14 @@ import { ToolButton } from './tool-button'
 import { Circle, MousePointer2, Pencil, Redo2, Square, StickyNote, Type, Undo2 } from 'lucide-react'
 import { CanvasMode, LayerType } from '@/lib/types/canvas.types'
 import useCanvasStore from '@/store/canvas.store'
-import { useHistory } from '@liveblocks/react'
+import { useCanRedo, useCanUndo, useHistory } from '@liveblocks/react'
 
 interface IToolbarProps { }
 
 function ToolBar({}: IToolbarProps) {
-  const { undo, redo, canRedo, canUndo } = useHistory();
+  const { undo, redo } = useHistory();
+  const canUndo = useCanUndo()
+  const canRedo = useCanRedo()
   const { state, lastUsedColor, layerType, setCanvasState, setMode, setLayerType, setLastUsedColor } = useCanvasStore();
 
   return (

@@ -122,4 +122,5 @@ export enum CanvasMode {
     Pencil = 'PENCIL'
 }
 
+export type ShapeLayerType = LayerType.Ellipse | LayerType.Note | LayerType.Text | LayerType.Rectangle
 export type Layer = RectangleLayer | TextLayer | EllipseLayer | PathLayer | NoteLayer
