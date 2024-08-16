@@ -1,7 +1,7 @@
 import usePanzoomTransform from "@/store/panzoom.store";
 import { useOther } from "@liveblocks/react";
 import { MousePointer2 } from "lucide-react";
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef } from "react";
 interface ICursorProps {
     connectionId: number,
     color: string
@@ -13,8 +13,8 @@ export const Cursor = memo(({
     const { transform, setScale, setCoordinates, setAngle, updateTransform } = usePanzoomTransform()
     const { name } = useOther(connectionId, user => user.info)
     const cursor = useOther(connectionId, user => user.presence.cursor)
-    const [svgScale, setSvgScale] = useState(transform.scale)
     const mousePointerRef = useRef<SVGElement | any>()
+    const POINTER_SIZE = 25;
 
     if(!cursor) {
         return null;
@@ -23,9 +23,8 @@ export const Cursor = memo(({
     const { x, y } = cursor;
 
     useEffect(() => {
-        setSvgScale(transform.scale)
-        mousePointerRef.current?.setAttribute('height', `${20/svgScale}`)
-        mousePointerRef.current?.setAttribute('width', `${20/svgScale}`)
+        mousePointerRef.current?.setAttribute('height', `${POINTER_SIZE/transform.scale}`)
+        mousePointerRef.current?.setAttribute('width', `${POINTER_SIZE/transform.scale}`)
     }, [transform])
 
     return (
@@ -33,9 +32,9 @@ export const Cursor = memo(({
         style={{
             transform: `translateX${x}px translateY${y}px`,
         }}
-        height={50/svgScale}
-        width={50/svgScale}
-        className="relative drop-shadow-sm"
+        height={POINTER_SIZE/transform.scale}
+        width={POINTER_SIZE/transform.scale}
+        className="absolute drop-shadow-sm"
         >
             <MousePointer2
             ref={mousePointerRef}

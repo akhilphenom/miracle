@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import { PanZoom } from 'react-easy-panzoom'
 import { CursorsPresence } from './cursors-presence'
 import usePanzoomTransform from '@/store/panzoom.store'
@@ -28,11 +28,11 @@ function PanzoomSVG({
             boundaryRatioHorizontal={1}
             enableBoundingBox
             maxZoom={2}
-            minZoom={0.5}
+            minZoom={0.2}
             onStateChange={observeChanges}
         >
             <svg style={{
-                width: `${width}px`, height: `${height}px`, backgroundColor: 'slateblue'
+                width: `${width}px`, height: `${height}px`
             }}>
                 <g>
                     <CursorsPresence/>

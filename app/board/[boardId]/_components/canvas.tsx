@@ -25,6 +25,7 @@ function CanvasComponent ({
 
   return (
     <main className='h-full w-full bg-blue-50 touch-none'>
+        <PanzoomSVG width={100000} height={100000}/>
         <InfoComponent boardId={boardId}/>
         <Participants/>
         <ToolBar 
@@ -33,7 +34,6 @@ function CanvasComponent ({
         canRedo={canRedo} canUndo={canUndo} 
         undo={undo} redo={redo}
         />
-        <PanzoomSVG width={100000} height={100000}/>
     </main>
   )
 }
