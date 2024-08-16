@@ -1,11 +1,7 @@
-"use client"
-
-import React, { useState } from 'react'
+import React from 'react'
 import InfoComponent from './info'
 import Participants from './participants'
 import ToolBar from './toolbar'
-import { CanvasMode, CanvasState } from '@/lib/types/canvas.types'
-import { useCanRedo, useCanUndo, useHistory } from '@liveblocks/react'
 import PanzoomSVG from './panzoom-svg'
 
 interface CanvasProps {
@@ -15,25 +11,16 @@ interface CanvasProps {
 function CanvasComponent ({
   boardId
 }: CanvasProps) {
-  const [canvasState, setCanvasState] = useState<CanvasState>({
-    mode: CanvasMode.None,
-  })
-
-  const { undo, redo } = useHistory();
-  const canUndo = useCanUndo();
-  const canRedo = useCanRedo();
+  const MAX_LAYERS = 150;
+  const MAX_WIDTH = 100000;
+  const MAX_HEIGHT = 100000;
 
   return (
     <main className='h-full w-full bg-blue-50 touch-none'>
-        <PanzoomSVG width={100000} height={100000}/>
+        <PanzoomSVG width={MAX_WIDTH} height={MAX_HEIGHT} maxLayers={MAX_LAYERS}/>
         <InfoComponent boardId={boardId}/>
         <Participants/>
-        <ToolBar 
-        canvasState={canvasState} 
-        setCanvasState={setCanvasState} 
-        canRedo={canRedo} canUndo={canUndo} 
-        undo={undo} redo={redo}
-        />
+        <ToolBar/>
     </main>
   )
 }

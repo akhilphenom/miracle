@@ -3,6 +3,7 @@
 import React from 'react'
 import { ClientSideSuspense, LiveblocksProvider, RoomProvider } from '@liveblocks/react';
 import { useAxios } from '@/lib/hooks/axios.hook';
+import { LiveList, LiveMap } from '@liveblocks/client';
 
 interface WhiteboardRoomProps {
     children?: React.ReactNode
@@ -29,19 +30,19 @@ function WhiteboardRoom ({
 
     return (
         <LiveblocksProvider authEndpoint={authEndpoint} throttle={16}>
-            <RoomProvider id={roomId} initialPresence={{
-                cursor: {
-                    x: 0, y: 0
+            <RoomProvider 
+            id={roomId} 
+            initialPresence={ { cursor: { x: 0, y: 0 }, selection: [] } }
+            initialStorage={{ layerIds: new LiveList([]), layers: new LiveMap()}}
+            >
+                {
+                    response?.success ?
+                    <ClientSideSuspense fallback={fallback}>
+                        {children}
+                    </ClientSideSuspense>
+                    : fallback
                 }
-            }}>
-            {
-                response?.success ?
-                <ClientSideSuspense fallback={fallback}>
-                    {children}
-                </ClientSideSuspense>
-                : fallback
-            }
-                </RoomProvider> 
+            </RoomProvider> 
         </LiveblocksProvider>
     )
 }

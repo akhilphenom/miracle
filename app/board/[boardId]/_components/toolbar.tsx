@@ -1,28 +1,26 @@
+"use client";
+
 import { Skeleton } from '@/components/ui/skeleton'
 import React from 'react'
 import { ToolButton } from './tool-button'
 import { Circle, MousePointer2, Pencil, Redo2, Square, StickyNote, Type, Undo2 } from 'lucide-react'
-import { CanvasMode, CanvasState, LayerType } from '@/lib/types/canvas.types'
+import { CanvasMode, LayerType } from '@/lib/types/canvas.types'
+import useCanvasStore from '@/store/canvas.store'
+import { useHistory } from '@liveblocks/react'
 
-interface IToolbarProps {
-  canvasState: CanvasState,
-  setCanvasState: (newState: CanvasState) => void,
-  undo: () => void
-  redo: () => void
-  canUndo: boolean
-  canRedo: boolean
-}
+interface IToolbarProps { }
 
-function ToolBar({
-  canvasState, setCanvasState, undo, redo, canRedo, canUndo
-}: IToolbarProps) {
+function ToolBar({}: IToolbarProps) {
+  const { undo, redo, canRedo, canUndo } = useHistory();
+  const { state: canvasState, setCanvasState, setMode, setLayerType, setLastUsedColor } = useCanvasStore();
+
   return (
     <div className='absolute top-[50%] -translate-y-[50%] left-3 text-sm flex flex-col gap-2'>
       <div className='rounded-md bg-white p-1.5 flex flex-col items-center shadow-md gap-2'>
         <ToolButton 
         label='Select'
         icon={MousePointer2}
-        onClick={() => setCanvasState({ mode: CanvasMode.None })}
+        onClick={() => setMode(CanvasMode.None)}
         isActive={ 
           [
             CanvasMode.None,
