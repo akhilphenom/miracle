@@ -29,20 +29,18 @@ export const Cursor = memo(({
 
     return (
         <foreignObject
-        style={{
-            transform: `translateX${x}px translateY${y}px`,
-        }}
+        x={x/transform.scale}
+        y={y/transform.scale}
         height={POINTER_SIZE/transform.scale}
         width={POINTER_SIZE/transform.scale}
-        className="absolute drop-shadow-sm"
+        className="drop-shadow-sm"
         >
             <MousePointer2
             ref={mousePointerRef}
             style={{
                 color,
                 fill: color,
-            }}
-            />
+            }}/>
         </foreignObject>
     )
 })

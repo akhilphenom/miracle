@@ -28,7 +28,7 @@ function WhiteboardRoom ({
     };
 
     return (
-        <LiveblocksProvider authEndpoint={authEndpoint}>
+        <LiveblocksProvider authEndpoint={authEndpoint} throttle={16}>
             <RoomProvider id={roomId} initialPresence={{
                 cursor: {
                     x: 0, y: 0
