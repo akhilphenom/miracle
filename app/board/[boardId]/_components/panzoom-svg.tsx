@@ -9,6 +9,7 @@ import { CanvasMode, Point, ShapeLayerType } from '@/lib/types/canvas.types'
 import useCanvasStore from '@/store/canvas.store'
 import { v4 as uuid } from 'uuid';
 import { LiveObject } from '@liveblocks/client'
+import { Layer } from './layer';
 
 interface IPanzoomSVGProps {
     width: number,
@@ -75,7 +76,7 @@ function PanzoomSVG({
         const point: Point = getAbsoluteCoordinates(e)
         console.log(point, state.mode, layerType)
         if(state.mode == CanvasMode.Inserting) {
-            insertLayer(layerType as ShapeLayerType, point)
+            insertLayer(layerType as ShapeLayerType, { x: point.x/transform.scale, y: point.y/transform.scale })
         } else {
             setCanvasState({ mode: CanvasMode.None })
         }
@@ -100,6 +101,14 @@ function PanzoomSVG({
             style={{ position: 'relative', width: `${width}px`, height: `${height}px` }}
             >
                 <g>
+                    {layerIds?.map(layerId => (
+                        <Layer
+                        key={layerId}
+                        id={layerId}
+                        onLayerPointerDown={() => {}}
+                        selectionColor={'#000'}
+                        />
+                    ))}
                     <CursorsPresence/>
                 </g>
             </svg>
