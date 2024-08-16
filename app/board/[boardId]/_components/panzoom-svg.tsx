@@ -25,7 +25,7 @@ function PanzoomSVG({
     height,
     maxLayers
 }: IPanzoomSVGProps) {
-    const { state: canvasState, setCanvasState, setMode, setLayerType, setLastUsedColor } = useCanvasStore();
+    const { state, lastUsedColor, layerType, setCanvasState, setMode, setLayerType, setLastUsedColor } = useCanvasStore();
     const { transform, setScale, setCoordinates, setAngle, updateTransform } = usePanzoomTransform()
 
     const layerIds = useStorage(({ layerIds }) => layerIds)
@@ -47,7 +47,7 @@ function PanzoomSVG({
         y: position.y,
         height: 100,
         width: 100,
-        fill: canvasState.lastUsedColor
+        fill: lastUsedColor
       })
   
       liveLayerIds.push(layerId)
@@ -55,7 +55,7 @@ function PanzoomSVG({
   
       setMyPresence({ selection: [layerId] }, { addToHistory: true })
       setMode(CanvasMode.None)
-    }, [canvasState.lastUsedColor])
+    }, [lastUsedColor])
 
     const getAbsoluteCoordinates = (e: React.PointerEvent): Point => {
         return {
@@ -73,8 +73,8 @@ function PanzoomSVG({
         e: React.PointerEvent
     )=>{
         const point: Point = getAbsoluteCoordinates(e)
-        if(canvasState.mode == CanvasMode.Inserting) {
-            
+        if(state.mode == CanvasMode.Inserting) {
+            insertLayer(layerType, point)
         } else {
             setCanvasState({ mode: CanvasMode.None })
         }
