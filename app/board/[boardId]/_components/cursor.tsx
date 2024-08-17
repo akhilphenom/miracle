@@ -29,12 +29,12 @@ export const Cursor = memo(({
     useEffect(() => {
         mousePointerRef.current?.setAttribute('height', `${POINTER_SIZE/transform.scale}`)
         mousePointerRef.current?.setAttribute('width', `${POINTER_SIZE/transform.scale}`)
-    }, [transform])
+    }, [transform.x, transform.y, transform.scale])
 
     return (
         <foreignObject
-        x={x/transform.scale}
-        y={y/transform.scale}
+        x={x}
+        y={y}
         height={getHeight}
         width={getWidth}
         className="drop-shadow-sm"

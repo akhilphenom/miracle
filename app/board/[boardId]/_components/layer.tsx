@@ -8,7 +8,7 @@ import { Rectangle } from './rectangle.layer'
 interface ILayer {
     id: string,
     onLayerPointerDown: (e: React.PointerEvent, layerId: string) => void,
-    selectionColor?: string
+    selectionColor: string
 }
 
 function LayerPreview({
@@ -20,7 +20,6 @@ function LayerPreview({
     }
 
     const { x, y, width, height, fill, type } = layer
-    console.log(type)
 
     switch(type) {
         case LayerType.Rectangle:
@@ -28,9 +27,8 @@ function LayerPreview({
                 <Rectangle 
                 id={id} 
                 layer={{ type: LayerType.Rectangle, x, y, height, width, fill }} 
-                onPointerDown={function (e: React.PointerEvent, id: string): void {
-                    throw new Error('Function not implemented.')
-                }}
+                onPointerDown={onLayerPointerDown}
+                selectionColor={selectionColor}
                 />
             )
         default:

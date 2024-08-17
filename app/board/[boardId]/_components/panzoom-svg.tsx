@@ -1,15 +1,16 @@
 "use client";
 
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { PanZoom } from 'react-easy-panzoom'
 import { CursorsPresence } from './cursors-presence'
 import usePanzoomTransform from '@/store/panzoom.store'
-import { useMutation, useStorage } from '@liveblocks/react'
+import { useMutation, useOthersMapped, useStorage } from '@liveblocks/react'
 import { CanvasMode, Point, ShapeLayerType } from '@/lib/types/canvas.types'
 import useCanvasStore from '@/store/canvas.store'
 import { v4 as uuid } from 'uuid';
 import { LiveObject } from '@liveblocks/client'
 import { Layer } from './layer';
+import { pickRandomColor } from '@/lib/utils';
 
 interface IPanzoomSVGProps {
     width: number,
@@ -29,7 +30,8 @@ function PanzoomSVG({
     const { state, lastUsedColor, layerType, setCanvasState, setMode, setLayerType, setLastUsedColor } = useCanvasStore();
     const { transform, setScale, setCoordinates, setAngle, panPrevented, setPreventPan, updateTransform } = usePanzoomTransform()
 
-    const layerIds = useStorage(({ layerIds }) => layerIds)
+    const layerIds = useStorage(({ layerIds }) => layerIds) ?? []
+    const selections = useOthersMapped(other => other.presence.selection)
 
     const insertLayer = useMutation((
       { storage, setMyPresence }, 
@@ -58,25 +60,34 @@ function PanzoomSVG({
       setMode(CanvasMode.None)
     }, [lastUsedColor])
 
-    const getAbsoluteCoordinates = (e: React.PointerEvent): Point => {
+    const getCoordinatesForShape = (e: React.PointerEvent): Point => {
         return {
-            x: e.clientX-transform.x,
-            y: e.clientY-transform.y
+            x: (e.clientX-transform.x)/transform.scale,
+            y: (e.clientY-transform.y)/transform.scale
+        }
+    }
+
+    const getAbsoluteCoordinates = (e: React.PointerEvent): Point => {
+        /**
+         * 
+         */
+        return {
+            x: (e.clientX - transform.x)/transform.scale,
+            y: (e.clientY - transform.y)/transform.scale
         }
     }
 
     const onPointerMove = useMutation(({ setMyPresence }, e: React.PointerEvent) => {
         setMyPresence({ cursor: getAbsoluteCoordinates(e) })
+        console.log(getAbsoluteCoordinates(e))
     }, [transform.x, transform.y, transform.scale])
 
     const onPointerUp = useMutation((
         { setMyPresence }, 
         e: React.PointerEvent
     )=>{
-        const point: Point = getAbsoluteCoordinates(e)
-        console.log(point, state.mode, layerType)
         if(state.mode == CanvasMode.Inserting) {
-            insertLayer(layerType as ShapeLayerType, { x: point.x/transform.scale, y: point.y/transform.scale })
+            insertLayer(layerType as ShapeLayerType, getCoordinatesForShape(e))
         } else {
             setCanvasState({ mode: CanvasMode.None })
         }
@@ -85,6 +96,17 @@ function PanzoomSVG({
     const observeChanges = useCallback((e: PanzoomState) => {
         updateTransform(e)
     }, [height, width])
+
+    const getSelectionColor = useMemo(() => {
+        const layerMap: {[key: string]: string} = {};
+        for(const user of selections) {
+            const [connectionId, selection] = user;
+            for(const layerId of selection) {
+                layerMap[layerId] = pickRandomColor(connectionId)
+            }
+        }
+        return layerMap
+    }, [selections])
 
     return (
         <PanZoom
@@ -101,12 +123,12 @@ function PanzoomSVG({
             style={{ position: 'relative', width: `${width}px`, height: `${height}px` }}
             >
                 <g>
-                    {layerIds?.map(layerId => (
+                    {layerIds.map(layerId => (
                         <Layer
                         key={layerId}
                         id={layerId}
                         onLayerPointerDown={() => {}}
-                        selectionColor={'#000'}
+                        selectionColor={getSelectionColor[layerId]}
                         />
                     ))}
                     <CursorsPresence/>

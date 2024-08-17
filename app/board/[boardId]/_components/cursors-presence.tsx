@@ -8,7 +8,7 @@ const Cursors = () => {
     return (
         <>
             {connectionIds.map(connectionId => {
-              const color = pickRandomColor();
+              const color = pickRandomColor(connectionId);
               return (
                 <Cursor
                 key={connectionId}

@@ -1,4 +1,5 @@
 import { RectangleLayer } from '@/lib/types/canvas.types'
+import usePanzoomTransform from '@/store/panzoom.store'
 import React from 'react'
 
 interface IRectangleLayerProps {
@@ -11,15 +12,20 @@ interface IRectangleLayerProps {
 function RectangleComponent({
     id, layer: { x, y, height, width, fill: { r, g, b } }, onPointerDown, selectionColor
 }: IRectangleLayerProps) {
+    const { transform: { scale } } = usePanzoomTransform();
     return (
         <foreignObject
         x={x}
         y={y}
         height={height}
         width={width}
-        className="drop-shadow-sm">
+        className="drop-shadow-sm"
+        >
             <div style={{
-                height, width, backgroundColor: `rgb(${r},${g},${b})`
+                height, width, 
+                backgroundColor: `rgb(${r},${g},${b})`,
+                borderWidth: 3/scale,
+                borderColor: selectionColor
             }}>
             </div>
         </foreignObject>
