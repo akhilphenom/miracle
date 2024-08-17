@@ -4,7 +4,7 @@ import React, { useCallback, useMemo } from 'react'
 import { PanZoom } from 'react-easy-panzoom'
 import { CursorsPresence } from './cursors-presence'
 import usePanzoomTransform from '@/store/panzoom.store'
-import { useMutation, useOthersMapped, useStorage } from '@liveblocks/react'
+import { useHistory, useMutation, useOthersMapped, useStorage } from '@liveblocks/react'
 import { CanvasMode, Point, ShapeLayerType } from '@/lib/types/canvas.types'
 import useCanvasStore from '@/store/canvas.store'
 import { v4 as uuid } from 'uuid';
@@ -29,7 +29,8 @@ function PanzoomSVG({
 }: IPanzoomSVGProps) {
     const { state, lastUsedColor, layerType, setCanvasState, setMode, setLayerType, setLastUsedColor } = useCanvasStore();
     const { transform, setScale, setCoordinates, setAngle, panPrevented, setPreventPan, updateTransform } = usePanzoomTransform()
-
+    
+    const history = useHistory();
     const layerIds = useStorage(({ layerIds }) => layerIds) ?? []
     const selections = useOthersMapped(other => other.presence.selection)
 
@@ -80,7 +81,25 @@ function PanzoomSVG({
         } else {
             setCanvasState({ mode: CanvasMode.None })
         }
+        history.resume()
     }, [transform.x, transform.y, transform.scale, state, layerType, insertLayer])
+
+    const onPointerDown = useMutation((
+        { self, setMyPresence },
+        e: React.PointerEvent,
+        layerId: string
+    ) => {
+        if([CanvasMode.Pencil, CanvasMode.Inserting, undefined].includes(state.mode)) {
+            return;
+        }
+        history.pause();
+        e.stopPropagation();
+        const point = getAbsoluteCoordinates(e);
+        if(!self.presence.selection.includes(layerId)) {
+            setMyPresence({ selection: [layerId] }, { addToHistory: true })
+        }
+        setCanvasState({ current: point, mode: CanvasMode.Translating })
+    }, [state, transform])
     
     const observeChanges = useCallback((e: PanzoomState) => {
         updateTransform(e)
@@ -95,7 +114,7 @@ function PanzoomSVG({
             }
         }
         return layerMap
-    }, [selections])
+    }, [selections, state])
 
     return (
         <PanZoom
@@ -116,7 +135,7 @@ function PanzoomSVG({
                         <Layer
                         key={layerId}
                         id={layerId}
-                        onLayerPointerDown={() => {}}
+                        onLayerPointerDown={onPointerDown}
                         selectionColor={getSelectionColor[layerId]}
                         />
                     ))}

@@ -21,7 +21,9 @@ function RectangleComponent({
         width={width}
         className="drop-shadow-sm"
         >
-            <div style={{
+            <div 
+            onPointerDown={(e) => onPointerDown(e, id)}
+            style={{
                 height, width, 
                 backgroundColor: `rgb(${r},${g},${b})`,
                 borderWidth: 3/scale,
