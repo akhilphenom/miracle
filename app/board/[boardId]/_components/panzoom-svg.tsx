@@ -60,17 +60,7 @@ function PanzoomSVG({
       setMode(CanvasMode.None)
     }, [lastUsedColor])
 
-    const getCoordinatesForShape = (e: React.PointerEvent): Point => {
-        return {
-            x: (e.clientX-transform.x)/transform.scale,
-            y: (e.clientY-transform.y)/transform.scale
-        }
-    }
-
     const getAbsoluteCoordinates = (e: React.PointerEvent): Point => {
-        /**
-         * 
-         */
         return {
             x: (e.clientX - transform.x)/transform.scale,
             y: (e.clientY - transform.y)/transform.scale
@@ -79,7 +69,6 @@ function PanzoomSVG({
 
     const onPointerMove = useMutation(({ setMyPresence }, e: React.PointerEvent) => {
         setMyPresence({ cursor: getAbsoluteCoordinates(e) })
-        console.log(getAbsoluteCoordinates(e))
     }, [transform.x, transform.y, transform.scale])
 
     const onPointerUp = useMutation((
@@ -87,7 +76,7 @@ function PanzoomSVG({
         e: React.PointerEvent
     )=>{
         if(state.mode == CanvasMode.Inserting) {
-            insertLayer(layerType as ShapeLayerType, getCoordinatesForShape(e))
+            insertLayer(layerType as ShapeLayerType, getAbsoluteCoordinates(e))
         } else {
             setCanvasState({ mode: CanvasMode.None })
         }
