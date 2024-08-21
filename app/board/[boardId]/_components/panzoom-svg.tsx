@@ -110,7 +110,7 @@ function PanzoomSVG({
 
     }
 
-    const panPrevention = (event: any, x: number, y: number) => {
+    const panPrevention = useCallback((event: any, x: number, y: number) => {
         const possibleRefs = []
         for(const layerId of layerIds) {
             possibleRefs.push(document.getElementById(layerId)!)
@@ -136,7 +136,7 @@ function PanzoomSVG({
             }
         }
         return false;
-    }
+    }, [transform])
 
     const getSelectionColor = useMemo(() => {
         const layerMap: {[key: string]: string} = {};
