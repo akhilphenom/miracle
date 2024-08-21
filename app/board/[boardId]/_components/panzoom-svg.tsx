@@ -136,7 +136,7 @@ function PanzoomSVG({
             }
         }
         return false;
-    }, [transform])
+    }, [transform, layerIds])
 
     const getSelectionColor = useMemo(() => {
         const layerMap: {[key: string]: string} = {};
