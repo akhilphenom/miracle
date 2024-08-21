@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo, useRef } from 'react'
 import { PanZoom } from 'react-easy-panzoom'
 import { CursorsPresence } from './cursors-presence'
 import usePanzoomTransform from '@/store/panzoom.store'
@@ -29,8 +29,9 @@ function PanzoomSVG({
     maxLayers
 }: IPanzoomSVGProps) {
     const { state, lastUsedColor, layerType, setCanvasState, setMode, setLayerType, setLastUsedColor } = useCanvasStore();
-    const { transform, setScale, setCoordinates, setAngle, panPrevented, setPreventPan, updateTransform } = usePanzoomTransform()
-    
+    const { transform, setScale, setCoordinates, setAngle, panPrevented, setPreventPan, updateTransform } = usePanzoomTransform();
+    const ref = useRef<SVGElement | HTMLElement | any>(null);
+
     const history = useHistory();
     const layerIds = useStorage(({ layerIds }) => layerIds) ?? []
     const selections = useOthersMapped(other => other.presence.selection)
@@ -110,6 +111,25 @@ function PanzoomSVG({
 
     }
 
+    const panPrevention = (event: any, x: number, y: number) => {
+        if (event.target === ref) {
+            setPreventPan(true)
+            return true
+        }  
+
+        const contentRect = ref.current.getBoundingClientRect()
+        
+        const x1 = contentRect.left
+        const x2 = contentRect.right
+        const y1 = contentRect.top
+        const y2 = contentRect.bottom
+        
+        const preventPan = (x >= x1 && x <= x2) && (y >= y1 && y <= y2);
+        setPreventPan(preventPan)
+
+        return preventPan
+    }
+
     const getSelectionColor = useMemo(() => {
         const layerMap: {[key: string]: string} = {};
         for(const user of selections) {
@@ -129,13 +149,15 @@ function PanzoomSVG({
             maxZoom={2}
             minZoom={0.2}
             onStateChange={observeChanges}
+            preventPan={panPrevention}
         >
             <svg 
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}
             style={{ position: 'relative', width: `${width}px`, height: `${height}px` }}
             >
-                <g>
+                <g
+                ref={ref}>
                     {layerIds.map(layerId => (
                         <Layer
                         key={layerId}
@@ -145,6 +167,8 @@ function PanzoomSVG({
                         />
                     ))}
                     <SelectionBox onResize={selectionResizeHandler}/>
+                </g>
+                <g>
                     <CursorsPresence/>
                 </g>
             </svg>

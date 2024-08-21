@@ -4,7 +4,7 @@ import { useSelectionBounds } from '@/lib/hooks/use-selection-bounds.hook';
 import { LayerType, SIDE, XYWH } from '@/lib/types/canvas.types'
 import usePanzoomTransform from '@/store/panzoom.store';
 import { useSelf, useStorage } from '@liveblocks/react';
-import React, { memo } from 'react'
+import React, { memo, useRef } from 'react'
 
 interface ISelectionBoxProps {
     onResize: (corner: SIDE, initialBounds: XYWH) => void
@@ -13,7 +13,8 @@ interface ISelectionBoxProps {
 function SelectionBoxComponent ({
     onResize
 }: ISelectionBoxProps) {
-    const { transform: { scale } } = usePanzoomTransform()
+    const ref = useRef<SVGRectElement>(null);
+    const { transform: { scale }, panPrevented, setPreventPan } = usePanzoomTransform()
     const HANDLE_WIDTH = 8/scale;
     const layerId = useSelf(me => me.presence.selection.length == 1 ? me.presence.selection[0] : null)
 
@@ -27,19 +28,38 @@ function SelectionBoxComponent ({
     const { x, y, width, height } = bounds
 
     return (
-        <foreignObject 
-        x={x}
-        y={y}
-        height={height}
-        width={width}
-        >
-            <div 
-            className=' border-blue-500 border-2'
-            style={{ height, width }}
-            >
-                
-            </div>
-        </foreignObject>
+        <>
+            <rect 
+            ref={ref}
+            className='stroke-blue-500'
+            x={x}
+            y={y}
+            stroke={`${1/scale}px`}
+            height={height}
+            width={width}
+            />
+            {
+                showHandle ? 
+                    (
+                        <>
+                            <rect
+                            className='stroke-1 stroke-blue-500 fill-white'
+                            x={x - (HANDLE_WIDTH/2)}
+                            y={y - (HANDLE_WIDTH/2)}
+                            height={HANDLE_WIDTH}
+                            width={HANDLE_WIDTH}
+                            style={{ cursor: 'nwse-resize'}}
+                            onPointerDown={(e) => {
+                                e.preventDefault()
+                            }}
+                            onPointerUp={e => {
+                            }}
+                            />
+                        </>
+                    )
+                : null
+            }
+        </>
     )
 }
 
