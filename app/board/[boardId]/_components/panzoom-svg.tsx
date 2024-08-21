@@ -11,6 +11,7 @@ import { v4 as uuid } from 'uuid';
 import { LiveObject } from '@liveblocks/client'
 import { Layer } from './layer';
 import { pickRandomColor } from '@/lib/utils';
+import { SelectionBox } from './selection-box';
 
 interface IPanzoomSVGProps {
     width: number,
@@ -105,6 +106,10 @@ function PanzoomSVG({
         updateTransform(e)
     }, [height, width])
 
+    const selectionResizeHandler = () => {
+
+    }
+
     const getSelectionColor = useMemo(() => {
         const layerMap: {[key: string]: string} = {};
         for(const user of selections) {
@@ -139,6 +144,7 @@ function PanzoomSVG({
                         selectionColor={getSelectionColor[layerId]}
                         />
                     ))}
+                    <SelectionBox onResize={selectionResizeHandler}/>
                     <CursorsPresence/>
                 </g>
             </svg>

@@ -81,10 +81,10 @@ export type XYWH = {
 }
 
 export type SIDE = {
-    top: 1,
-    bottom: 2,
+    top: 8,
+    bottom: 1,
     left: 4,
-    right: 8,
+    right: 6,
 }
 
 export type CanvasState = 
