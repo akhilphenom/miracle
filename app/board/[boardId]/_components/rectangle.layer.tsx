@@ -20,6 +20,7 @@ function RectangleComponent({
         height={height}
         width={width}
         className="drop-shadow-sm"
+        id={id}
         >
             <div 
             onPointerDown={(e) => onPointerDown(e, id)}
