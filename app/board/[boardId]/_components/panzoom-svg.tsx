@@ -173,7 +173,7 @@ function PanzoomSVG({
                         selectionColor={getSelectionColor[layerId]}
                         />
                     ))}
-                    <SelectionBox onResize={selectionResizeHandler}/>
+                    <SelectionBox onResize={selectionResizeHandler} scale={transform.scale}/>
                 </g>
                 <g>
                     <CursorsPresence/>
