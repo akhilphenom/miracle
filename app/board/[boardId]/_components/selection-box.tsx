@@ -43,16 +43,99 @@ function SelectionBoxComponent ({
                     (
                         <>
                             <rect
-                            className='stroke-1 stroke-blue-500 fill-white'
+                            className='stroke-blue-500 fill-white'
                             x={x - (HANDLE_WIDTH/(2*scale))}
                             y={y - (HANDLE_WIDTH/(2*scale))}
                             height={HANDLE_WIDTH/scale}
                             width={HANDLE_WIDTH/scale}
+                            stroke={`${1/scale}px`}
                             style={{ cursor: 'nwse-resize'}}
                             onPointerDown={(e) => {
                                 e.preventDefault()
                             }}
-                            onPointerUp={e => {
+                            />
+                            <rect
+                            className='stroke-blue-500 fill-white'
+                            x={x + (width/2) - (HANDLE_WIDTH/(2*scale))}
+                            y={y - (HANDLE_WIDTH/(2*scale))}
+                            height={HANDLE_WIDTH/scale}
+                            width={HANDLE_WIDTH/scale}
+                            stroke={`${1/scale}px`}
+                            style={{ cursor: 'ns-resize'}}
+                            onPointerDown={(e) => {
+                                e.preventDefault()
+                            }}
+                            />
+                            <rect
+                            className='stroke-blue-500 fill-white'
+                            x={x + width - (HANDLE_WIDTH/(2*scale))}
+                            y={y - (HANDLE_WIDTH/(2*scale))}
+                            height={HANDLE_WIDTH/scale}
+                            width={HANDLE_WIDTH/scale}
+                            stroke={`${1/scale}px`}
+                            style={{ cursor: 'nesw-resize'}}
+                            onPointerDown={(e) => {
+                                e.preventDefault()
+                            }}
+                            />
+                            <rect
+                            className='stroke-blue-500 fill-white'
+                            x={x + width - (HANDLE_WIDTH/(2*scale))}
+                            y={y + (height/2) - (HANDLE_WIDTH/(2*scale))}
+                            height={HANDLE_WIDTH/scale}
+                            width={HANDLE_WIDTH/scale}
+                            stroke={`${1/scale}px`}
+                            style={{ cursor: 'ew-resize'}}
+                            onPointerDown={(e) => {
+                                e.preventDefault()
+                            }}
+                            />
+                            <rect
+                            className='stroke-blue-500 fill-white'
+                            x={x + width - (HANDLE_WIDTH/(2*scale))}
+                            y={y + height - (HANDLE_WIDTH/(2*scale))}
+                            height={HANDLE_WIDTH/scale}
+                            width={HANDLE_WIDTH/scale}
+                            stroke={`${1/scale}px`}
+                            style={{ cursor: 'nwse-resize'}}
+                            onPointerDown={(e) => {
+                                e.preventDefault()
+                            }}
+                            />
+                            <rect
+                            className='stroke-blue-500 fill-white'
+                            x={x + (width/2) - (HANDLE_WIDTH/(2*scale))}
+                            y={y + height - (HANDLE_WIDTH/(2*scale))}
+                            height={HANDLE_WIDTH/scale}
+                            width={HANDLE_WIDTH/scale}
+                            stroke={`${1/scale}px`}
+                            style={{ cursor: 'ns-resize'}}
+                            onPointerDown={(e) => {
+                                e.preventDefault()
+                            }}
+                            />
+                            <rect
+                            className='stroke-blue-500 fill-white'
+                            x={x - (HANDLE_WIDTH/(2*scale))}
+                            y={y + height - (HANDLE_WIDTH/(2*scale))}
+                            height={HANDLE_WIDTH/scale}
+                            width={HANDLE_WIDTH/scale}
+                            stroke={`${1/scale}px`}
+                            style={{ cursor: 'nesw-resize'}}
+                            onPointerDown={(e) => {
+                                e.preventDefault()
+                            }}
+                            />
+                            <rect
+                            className='stroke-blue-500 fill-white'
+                            x={x - (HANDLE_WIDTH/(2*scale))}
+                            y={y + (height/2) - (HANDLE_WIDTH/(2*scale))}
+                            height={HANDLE_WIDTH/scale}
+                            width={HANDLE_WIDTH/scale}
+                            stroke={`${1/scale}px`}
+                            style={{ cursor: 'ew-resize'}}
+                            onPointerDown={(e) => {
+                                e.preventDefault()
                             }}
                             />
                         </>

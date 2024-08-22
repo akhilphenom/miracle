@@ -11,9 +11,9 @@ interface CanvasProps {
 function CanvasComponent ({
   boardId
 }: CanvasProps) {
-  const MAX_LAYERS = 150;
-  const MAX_WIDTH = 100000;
-  const MAX_HEIGHT = 100000;
+  const MAX_LAYERS = 100;
+  const MAX_WIDTH = 10000;
+  const MAX_HEIGHT = 10000;
 
   return (
     <main className='h-full w-full bg-blue-50 touch-none'>
