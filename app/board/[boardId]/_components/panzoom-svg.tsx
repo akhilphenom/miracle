@@ -5,12 +5,12 @@ import { PanZoom } from 'react-easy-panzoom'
 import { CursorsPresence } from './cursors-presence'
 import usePanzoomTransform from '@/store/panzoom.store'
 import { useHistory, useMutation, useOthersMapped, useStorage } from '@liveblocks/react'
-import { CanvasMode, Point, ShapeLayerType } from '@/lib/types/canvas.types'
+import { CanvasMode, Point, ShapeLayerType, SIDE, XYWH } from '@/lib/types/canvas.types'
 import useCanvasStore from '@/store/canvas.store'
 import { v4 as uuid } from 'uuid';
 import { LiveObject } from '@liveblocks/client'
 import { Layer } from './layer';
-import { pickRandomColor } from '@/lib/utils';
+import { pickRandomColor, resizeBounds } from '@/lib/utils';
 import { SelectionBox } from './selection-box';
 
 interface IPanzoomSVGProps {
@@ -62,6 +62,19 @@ function PanzoomSVG({
       setMode(CanvasMode.None)
     }, [lastUsedColor])
 
+    const resizeSelectedLayer = useMutation((
+        { self, storage },
+        point: Point
+    ) => {
+        if(state.mode != CanvasMode.Resizing) {
+            return;
+        }
+        const bounds = resizeBounds(state.initialBounds!, state.corner!, point)
+        const liveLayers = storage.get('layers');
+        const layer = liveLayers.get(self.presence.selection[0]);
+        layer && layer.update(bounds)
+    }, [state, transform])
+
     const getAbsoluteCoordinates = (e: React.PointerEvent): Point => {
         return {
             x: (e.clientX - transform.x)/transform.scale,
@@ -70,8 +83,12 @@ function PanzoomSVG({
     }
 
     const onPointerMove = useMutation(({ setMyPresence }, e: React.PointerEvent) => {
+        e.stopPropagation()
+        if(state.mode == CanvasMode.Resizing) {
+            resizeSelectedLayer(getAbsoluteCoordinates(e))
+        }
         setMyPresence({ cursor: getAbsoluteCoordinates(e) })
-    }, [transform.x, transform.y, transform.scale])
+    }, [transform.x, transform.y, transform.scale, state.mode, resizeSelectedLayer])
 
     const onPointerUp = useMutation((
         { setMyPresence }, 
@@ -106,16 +123,18 @@ function PanzoomSVG({
         updateTransform(e)
     }, [height, width])
 
-    const selectionResizeHandler = () => {
-
-    }
+    const selectionResizeHandler = useCallback((corner: SIDE, initialBounds: XYWH) => {
+        history.pause();
+        setCanvasState({ mode: CanvasMode.Resizing, initialBounds, corner })
+    }, [history])
 
     const panPrevention = useCallback((event: any, x: number, y: number) => {
         const possibleRefs = []
         for(const layerId of layerIds) {
             possibleRefs.push(document.getElementById(layerId)!)
         }
-        
+        possibleRefs.push(document.getElementById('selection-box')!)
+
         for(const ref of possibleRefs.filter(Boolean)) {
             if (event.target === ref) {
                 setPreventPan(true)
@@ -136,7 +155,7 @@ function PanzoomSVG({
             }
         }
         return false;
-    }, [transform, layerIds])
+    }, [transform, layerIds, resizeSelectedLayer, state])
 
     const getSelectionColor = useMemo(() => {
         const layerMap: {[key: string]: string} = {};

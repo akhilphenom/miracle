@@ -80,11 +80,11 @@ export type XYWH = {
     width: number,
 }
 
-export type SIDE = {
-    top: 8,
-    bottom: 1,
-    left: 4,
-    right: 6,
+export enum SIDE {
+    top = 8,
+    bottom = 1,
+    left = 4,
+    right = 6,
 }
 
 export type CanvasState = 

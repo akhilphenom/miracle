@@ -2,9 +2,8 @@
 
 import { useSelectionBounds } from '@/lib/hooks/use-selection-bounds.hook';
 import { LayerType, SIDE, XYWH } from '@/lib/types/canvas.types'
-import usePanzoomTransform from '@/store/panzoom.store';
 import { useSelf, useStorage } from '@liveblocks/react';
-import React, { memo, useRef } from 'react'
+import React, { memo } from 'react'
 
 interface ISelectionBoxProps {
     onResize: (corner: SIDE, initialBounds: XYWH) => void,
@@ -14,7 +13,6 @@ interface ISelectionBoxProps {
 function SelectionBoxComponent ({
     onResize, scale
 }: ISelectionBoxProps) {
-    const ref = useRef<SVGRectElement>(null);
     const HANDLE_WIDTH = 8;
     const layerId = useSelf(me => me.presence.selection.length == 1 ? me.presence.selection[0] : null)
 
@@ -28,13 +26,12 @@ function SelectionBoxComponent ({
     const { x, y, width, height } = bounds
 
     return (
-        <>
+        <g id={'selection-box'}>
             <rect 
-            ref={ref}
             className='stroke-blue-500'
             x={x}
             y={y}
-            stroke={`${1/scale}px`}
+            stroke={`${2/scale}`}
             height={height}
             width={width}
             />
@@ -48,10 +45,11 @@ function SelectionBoxComponent ({
                             y={y - (HANDLE_WIDTH/(2*scale))}
                             height={HANDLE_WIDTH/scale}
                             width={HANDLE_WIDTH/scale}
-                            stroke={`${1/scale}px`}
+                            stroke={`${2/scale}`}
                             style={{ cursor: 'nwse-resize'}}
                             onPointerDown={(e) => {
-                                e.preventDefault()
+                                e.stopPropagation()
+                                onResize(SIDE.top + SIDE.left, bounds)
                             }}
                             />
                             <rect
@@ -60,10 +58,11 @@ function SelectionBoxComponent ({
                             y={y - (HANDLE_WIDTH/(2*scale))}
                             height={HANDLE_WIDTH/scale}
                             width={HANDLE_WIDTH/scale}
-                            stroke={`${1/scale}px`}
+                            stroke={`${2/scale}`}
                             style={{ cursor: 'ns-resize'}}
                             onPointerDown={(e) => {
-                                e.preventDefault()
+                                e.stopPropagation()
+                                onResize(SIDE.top, bounds)
                             }}
                             />
                             <rect
@@ -72,10 +71,11 @@ function SelectionBoxComponent ({
                             y={y - (HANDLE_WIDTH/(2*scale))}
                             height={HANDLE_WIDTH/scale}
                             width={HANDLE_WIDTH/scale}
-                            stroke={`${1/scale}px`}
+                            stroke={`${2/scale}`}
                             style={{ cursor: 'nesw-resize'}}
                             onPointerDown={(e) => {
-                                e.preventDefault()
+                                e.stopPropagation()
+                                onResize(SIDE.top + SIDE.right, bounds)
                             }}
                             />
                             <rect
@@ -84,10 +84,11 @@ function SelectionBoxComponent ({
                             y={y + (height/2) - (HANDLE_WIDTH/(2*scale))}
                             height={HANDLE_WIDTH/scale}
                             width={HANDLE_WIDTH/scale}
-                            stroke={`${1/scale}px`}
+                            stroke={`${2/scale}`}
                             style={{ cursor: 'ew-resize'}}
                             onPointerDown={(e) => {
-                                e.preventDefault()
+                                e.stopPropagation()
+                                onResize(SIDE.right, bounds)
                             }}
                             />
                             <rect
@@ -96,10 +97,11 @@ function SelectionBoxComponent ({
                             y={y + height - (HANDLE_WIDTH/(2*scale))}
                             height={HANDLE_WIDTH/scale}
                             width={HANDLE_WIDTH/scale}
-                            stroke={`${1/scale}px`}
+                            stroke={`${2/scale}`}
                             style={{ cursor: 'nwse-resize'}}
                             onPointerDown={(e) => {
-                                e.preventDefault()
+                                e.stopPropagation()
+                                onResize(SIDE.bottom + SIDE.right, bounds)
                             }}
                             />
                             <rect
@@ -108,10 +110,11 @@ function SelectionBoxComponent ({
                             y={y + height - (HANDLE_WIDTH/(2*scale))}
                             height={HANDLE_WIDTH/scale}
                             width={HANDLE_WIDTH/scale}
-                            stroke={`${1/scale}px`}
+                            stroke={`${2/scale}`}
                             style={{ cursor: 'ns-resize'}}
                             onPointerDown={(e) => {
-                                e.preventDefault()
+                                e.stopPropagation()
+                                onResize(SIDE.bottom, bounds)
                             }}
                             />
                             <rect
@@ -120,10 +123,11 @@ function SelectionBoxComponent ({
                             y={y + height - (HANDLE_WIDTH/(2*scale))}
                             height={HANDLE_WIDTH/scale}
                             width={HANDLE_WIDTH/scale}
-                            stroke={`${1/scale}px`}
+                            stroke={`${2/scale}`}
                             style={{ cursor: 'nesw-resize'}}
                             onPointerDown={(e) => {
-                                e.preventDefault()
+                                e.stopPropagation()
+                                onResize(SIDE.bottom + SIDE.left, bounds)
                             }}
                             />
                             <rect
@@ -132,17 +136,18 @@ function SelectionBoxComponent ({
                             y={y + (height/2) - (HANDLE_WIDTH/(2*scale))}
                             height={HANDLE_WIDTH/scale}
                             width={HANDLE_WIDTH/scale}
-                            stroke={`${1/scale}px`}
+                            stroke={`${2/scale}`}
                             style={{ cursor: 'ew-resize'}}
                             onPointerDown={(e) => {
-                                e.preventDefault()
+                                e.stopPropagation()
+                                onResize(SIDE.left, bounds)
                             }}
                             />
                         </>
                     )
                 : null
             }
-        </>
+        </g>
     )
 }
 
