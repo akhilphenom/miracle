@@ -82,43 +82,6 @@ function PanzoomSVG({
         }
     }
 
-    const onPointerMove = useMutation(({ setMyPresence }, e: React.PointerEvent) => {
-        e.stopPropagation()
-        if(state.mode == CanvasMode.Resizing) {
-            resizeSelectedLayer(getAbsoluteCoordinates(e))
-        }
-        setMyPresence({ cursor: getAbsoluteCoordinates(e) })
-    }, [transform.x, transform.y, transform.scale, state.mode, resizeSelectedLayer])
-
-    const onPointerUp = useMutation((
-        { setMyPresence }, 
-        e: React.PointerEvent
-    )=>{
-        if(state.mode == CanvasMode.Inserting) {
-            insertLayer(layerType as ShapeLayerType, getAbsoluteCoordinates(e))
-        } else {
-            setCanvasState({ mode: CanvasMode.None })
-        }
-        history.resume()
-    }, [transform.x, transform.y, transform.scale, state, layerType, insertLayer])
-
-    const onPointerDown = useMutation((
-        { self, setMyPresence },
-        e: React.PointerEvent,
-        layerId: string
-    ) => {
-        if([CanvasMode.Pencil, CanvasMode.Inserting, undefined].includes(state.mode)) {
-            return;
-        }
-        history.pause();
-        e.stopPropagation();
-        const point = getAbsoluteCoordinates(e);
-        if(!self.presence.selection.includes(layerId)) {
-            setMyPresence({ selection: [layerId] }, { addToHistory: true })
-        }
-        setCanvasState({ current: point, mode: CanvasMode.Translating })
-    }, [state, transform])
-    
     const observeChanges = useCallback((e: PanzoomState) => {
         updateTransform(e)
     }, [height, width])
@@ -157,6 +120,47 @@ function PanzoomSVG({
         return false;
     }, [transform, layerIds, resizeSelectedLayer, state])
 
+
+    const onPointerMove = useMutation(({ setMyPresence }, e: React.PointerEvent) => {
+        e.stopPropagation()
+        console.log(state.mode)
+        if (state.mode == CanvasMode.Translating) {
+
+        } else if (state.mode == CanvasMode.Resizing) {
+            resizeSelectedLayer(getAbsoluteCoordinates(e))
+        }
+        setMyPresence({ cursor: getAbsoluteCoordinates(e) })
+    }, [transform, state.mode, resizeSelectedLayer])
+
+    const onLayerPointerDown = useMutation((
+        { self, setMyPresence },
+        e: React.PointerEvent,
+        layerId: string
+    ) => {
+        if([CanvasMode.Pencil, CanvasMode.Inserting].includes(state.mode!)) {
+            return;
+        }
+        history.pause();
+        e.stopPropagation();
+        const point = getAbsoluteCoordinates(e);
+        if(!self.presence.selection.includes(layerId)) {
+            setMyPresence({ selection: [layerId] }, { addToHistory: true })
+        }
+        setCanvasState({ current: point, mode: CanvasMode.Translating })
+    }, [transform, state, layerIds, panPrevention])
+
+    const onPointerUp = useMutation((
+        { setMyPresence }, 
+        e: React.PointerEvent
+    )=>{
+        if(state.mode == CanvasMode.Inserting) {
+            insertLayer(layerType as ShapeLayerType, getAbsoluteCoordinates(e))
+        } else {
+            setCanvasState({ mode: CanvasMode.None })
+        }
+        history.resume()
+    }, [transform, state, layerType, insertLayer, panPrevention])
+
     const getSelectionColor = useMemo(() => {
         const layerMap: {[key: string]: string} = {};
         for(const user of selections) {
@@ -188,7 +192,7 @@ function PanzoomSVG({
                         <Layer
                         key={layerId}
                         id={layerId}
-                        onLayerPointerDown={onPointerDown}
+                        onLayerPointerDown={onLayerPointerDown}
                         selectionColor={getSelectionColor[layerId]}
                         />
                     ))}
