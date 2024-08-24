@@ -29,6 +29,7 @@ function SelectionBoxComponent ({
         <g id={'selection-box'}>
             <rect 
             className='stroke-blue-500'
+            fill='none'
             x={x}
             y={y}
             stroke={`${2/scale}`}

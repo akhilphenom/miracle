@@ -100,3 +100,9 @@ export const resizeBounds = (bounds: XYWH, corner: SIDE, point: Point): XYWH => 
 
   return result;
 }
+
+export const translateLayer = (current: Point, movingCoordinates: Point) => {
+  const deltaX = movingCoordinates.x - current.x;
+  const deltaY = movingCoordinates.y - current.y;
+  return { deltaX, deltaY }
+}

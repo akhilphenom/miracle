@@ -10,8 +10,9 @@ import useCanvasStore from '@/store/canvas.store'
 import { v4 as uuid } from 'uuid';
 import { LiveObject } from '@liveblocks/client'
 import { Layer } from './layer';
-import { pickRandomColor, resizeBounds } from '@/lib/utils';
+import { pickRandomColor, resizeBounds, translateLayer } from '@/lib/utils';
 import { SelectionBox } from './selection-box';
+import { useSelectionBounds } from '@/lib/hooks/use-selection-bounds.hook';
 
 interface IPanzoomSVGProps {
     width: number,
@@ -30,6 +31,7 @@ function PanzoomSVG({
 }: IPanzoomSVGProps) {
     const { state, lastUsedColor, layerType, setCanvasState, setMode, setLayerType, setLastUsedColor } = useCanvasStore();
     const { transform, setScale, setCoordinates, setAngle, panPrevented, setPreventPan, updateTransform } = usePanzoomTransform();
+    const initialBounds = useSelectionBounds()
 
     const history = useHistory();
     const layerIds = useStorage(({ layerIds }) => layerIds) ?? []
@@ -73,6 +75,30 @@ function PanzoomSVG({
         const liveLayers = storage.get('layers');
         const layer = liveLayers.get(self.presence.selection[0]);
         layer && layer.update(bounds)
+    }, [state, transform])
+
+    const translateSelectedLayer = useMutation((
+        { self, storage },
+        point: Point
+    ) => {
+        if(state.mode != CanvasMode.Translating) {
+            return;
+        }
+        const { deltaX, deltaY } = translateLayer(state.current!, point)
+        const liveLayers = storage.get('layers');
+        const layer = liveLayers.get(self.presence.selection[0])!;
+        const bounds = {
+            x: layer.get('x'),
+            y: layer.get('y'),
+            width: layer.get('width'),
+            height: layer.get('height')
+        }
+        const translation = {
+            x: bounds.x + deltaX,
+            y: bounds.y + deltaY,
+        }
+        layer && layer.update({ ...translation })
+        setCanvasState({ current: point, mode: CanvasMode.Translating })
     }, [state, transform])
 
     const getAbsoluteCoordinates = (e: React.PointerEvent): Point => {
@@ -120,17 +146,15 @@ function PanzoomSVG({
         return false;
     }, [transform, layerIds, resizeSelectedLayer, state])
 
-
     const onPointerMove = useMutation(({ setMyPresence }, e: React.PointerEvent) => {
         e.stopPropagation()
-        console.log(state.mode)
         if (state.mode == CanvasMode.Translating) {
-
+            translateSelectedLayer(getAbsoluteCoordinates(e))
         } else if (state.mode == CanvasMode.Resizing) {
             resizeSelectedLayer(getAbsoluteCoordinates(e))
         }
         setMyPresence({ cursor: getAbsoluteCoordinates(e) })
-    }, [transform, state.mode, resizeSelectedLayer])
+    }, [transform, state, resizeSelectedLayer])
 
     const onLayerPointerDown = useMutation((
         { self, setMyPresence },
