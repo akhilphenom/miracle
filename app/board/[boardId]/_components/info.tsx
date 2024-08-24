@@ -9,6 +9,7 @@ import { useRenameModal } from '@/store/use-rename-modal';
 import { Menu } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import React, { useEffect } from 'react'
 
 interface InfoProps {
@@ -25,6 +26,7 @@ function InfoComponent({
 
   const onDelete = () => {
     onDeleteBoard(boardId)
+    history.back();
   }
 
   const PipeSeperator = () => <div className='h-[20px] w-[1px] rounded-md mx-2 bg-slate-300'/>

@@ -62,7 +62,7 @@ export const OrganizationSidebar = () => {
             }}
             />
             <div className="space-y-1 w-full">
-                <Button asChild size={'default'} className="w-full justify-start" variant={ favourites? 'ghost' : 'secondary' } onClick={() => setFavourites(false)}>
+                <Button asChild size={'default'} className="w-full justify-start" variant={ 'secondary' } onClick={() => setFavourites(false)}>
                     <Link href={"/"}>
                         <LayoutDashboard className="m-2 h-4"/>
                         White Boards
