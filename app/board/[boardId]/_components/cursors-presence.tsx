@@ -3,7 +3,13 @@ import React, { memo } from 'react'
 import { Cursor } from './cursor'
 import { pickRandomColor } from '@/lib/utils'
 
-const Cursors = () => {
+interface ICursorProps {
+  transform: { x: number, y: number, scale: number }
+}
+
+const Cursors = ({
+  transform
+}: ICursorProps) => {
     const connectionIds = useOthersConnectionIds()
     return (
         <>
@@ -11,6 +17,7 @@ const Cursors = () => {
               const color = pickRandomColor(connectionId);
               return (
                 <Cursor
+                transform={transform}
                 key={connectionId}
                 connectionId={connectionId}
                 color={color}
@@ -21,9 +28,11 @@ const Cursors = () => {
     )
 }
 
-export const CursorsPresence = memo(() => {
+export const CursorsPresence = memo(({
+  transform
+}: ICursorProps) => {
   return (
-    <Cursors/>
+    <Cursors transform={transform}/>
   )
 })
 

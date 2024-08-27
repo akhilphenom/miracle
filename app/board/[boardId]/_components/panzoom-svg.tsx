@@ -222,8 +222,8 @@ function PanzoomSVG({
                     <SelectionBox onResize={selectionResizeHandler} scale={transform.scale}/>
                 </g>
                 <g>
-                    <CursorsPresence/>
-                    <SelectionTools scale={transform.scale}/>
+                    <CursorsPresence transform={transform}/>
+                    <SelectionTools transform={transform} lastUsedColor={lastUsedColor} setLastUsedColor={setLastUsedColor}/>
                 </g>
             </svg>
         </PanZoom>

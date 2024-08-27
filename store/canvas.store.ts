@@ -7,7 +7,7 @@ type ICanvasState = {
     layerType: LayerType
 }
 
-interface ICanvasStore {
+export interface ICanvasStore {
     state: Partial<CanvasState>, 
     lastUsedColor: Color,
     layerType: LayerType
