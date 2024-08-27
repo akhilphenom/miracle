@@ -12,7 +12,7 @@ import { LiveObject } from '@liveblocks/client'
 import { Layer } from './layer';
 import { pickRandomColor, resizeBounds, translateLayer } from '@/lib/utils';
 import { SelectionBox } from './selection-box';
-import { useSelectionBounds } from '@/lib/hooks/use-selection-bounds.hook';
+import { SelectionTools } from './selection-tools';
 
 interface IPanzoomSVGProps {
     width: number,
@@ -31,7 +31,6 @@ function PanzoomSVG({
 }: IPanzoomSVGProps) {
     const { state, lastUsedColor, layerType, setCanvasState, setMode, setLayerType, setLastUsedColor } = useCanvasStore();
     const { transform, setScale, setCoordinates, setAngle, panPrevented, setPreventPan, updateTransform } = usePanzoomTransform();
-    const initialBounds = useSelectionBounds()
 
     const history = useHistory();
     const layerIds = useStorage(({ layerIds }) => layerIds) ?? []
@@ -224,6 +223,7 @@ function PanzoomSVG({
                 </g>
                 <g>
                     <CursorsPresence/>
+                    <SelectionTools scale={transform.scale}/>
                 </g>
             </svg>
         </PanZoom>

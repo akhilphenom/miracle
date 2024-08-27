@@ -43,3 +43,5 @@ function LayerPreview({
 }
 
 export const Layer = memo(LayerPreview)
+
+Layer.displayName = 'Layer Preview'

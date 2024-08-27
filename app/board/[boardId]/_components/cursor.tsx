@@ -1,8 +1,7 @@
-import { cn } from "@/lib/utils";
 import usePanzoomTransform from "@/store/panzoom.store";
 import { useOther } from "@liveblocks/react";
 import { MousePointer2 } from "lucide-react";
-import { memo, useCallback, useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 interface ICursorProps {
     connectionId: number,
     color: string

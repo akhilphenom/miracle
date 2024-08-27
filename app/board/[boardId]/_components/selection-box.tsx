@@ -153,3 +153,5 @@ function SelectionBoxComponent ({
 }
 
 export const SelectionBox = memo(SelectionBoxComponent)
+
+SelectionBox.displayName = 'Selection Box'

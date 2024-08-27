@@ -26,3 +26,5 @@ export const CursorsPresence = memo(() => {
     <Cursors/>
   )
 })
+
+CursorsPresence.displayName = 'Cursor Presence'

@@ -36,3 +36,5 @@ function RectangleComponent({
 }
 
 export const Rectangle = React.memo(RectangleComponent)
+
+Rectangle.displayName = 'Rectangle Layer'

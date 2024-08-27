@@ -1,6 +1,5 @@
 "use client";
 
-import { Skeleton } from '@/components/ui/skeleton'
 import React, { useEffect, useState } from 'react'
 import { AnimatedTooltip, IItem } from "@/components/ui/animated-tooltip";
 import { useOthers, useSelf } from '@liveblocks/react';
