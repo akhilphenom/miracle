@@ -122,6 +122,7 @@ function PanzoomSVG({
             possibleRefs.push(document.getElementById(layerId)!)
         }
         possibleRefs.push(document.getElementById('selection-box')!)
+        possibleRefs.push(document.getElementById('selection-toolbox')!)
 
         for(const ref of possibleRefs.filter(Boolean)) {
             if (event.target === ref) {

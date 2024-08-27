@@ -12,7 +12,7 @@ interface ISelectionToolProps {
 }
 
 function SelectionToolsComponent({
-    transform
+    transform: { x, y, scale }
 }: ISelectionToolProps) {
     const selection = useSelf(me => me.presence.selection);
     const selectionBounds = useSelectionBounds();
@@ -20,13 +20,31 @@ function SelectionToolsComponent({
         return null;
     }
 
-    const x = selectionBounds.width
+    const TOOLBOX_HEIGHT = 40
+    const PADDING_HORIZONTAL = 8
+
+    const height = TOOLBOX_HEIGHT/scale
+    const width = selectionBounds.width/scale
+    const absoluteX = selectionBounds.x - ((width - selectionBounds.width)/2)
+    const absoluteY = selectionBounds.y - height - 16/scale
+
     return (
-        <foreignObject width={selectionBounds.width} height={50/transform.scale}>
-            <div className='absolute p-3 rounded-md bg-white shadow-sm border flex select-none'
+        <foreignObject 
+        id='selection-toolbox'
+        height={height}
+        width={width} 
+        x={absoluteX}
+        y={absoluteY}
+        >
+            <div className='absolute bg-white shadow-sm border flex select-none'
             style={{
-                top: selectionBounds.y,
-                left: selectionBounds.x
+                height,
+                width,
+                borderRadius: 6/scale,
+                paddingTop: 4/scale,
+                paddingBottom: 4/scale,
+                paddingLeft: PADDING_HORIZONTAL/scale,
+                paddingRight: PADDING_HORIZONTAL/scale,
             }}>
                 
             </div>
