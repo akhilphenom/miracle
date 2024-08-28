@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useMemo, useRef } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { PanZoom } from 'react-easy-panzoom'
 import { CursorsPresence } from './cursors-presence'
 import usePanzoomTransform from '@/store/panzoom.store'
@@ -29,12 +29,14 @@ function PanzoomSVG({
     height,
     maxLayers
 }: IPanzoomSVGProps) {
-    const { state, lastUsedColor, layerType, setCanvasState, setMode, setLayerType, setLastUsedColor } = useCanvasStore();
+    const { state, lastUsedColor, layerType, setCanvasState, setMode, setLayerType, setLastUsedColor, setShowColorPicker, showColorPicker } = useCanvasStore();
     const { transform, setScale, setCoordinates, setAngle, panPrevented, setPreventPan, updateTransform } = usePanzoomTransform();
 
     const history = useHistory();
     const layerIds = useStorage(({ layerIds }) => layerIds) ?? []
     const selections = useOthersMapped(other => other.presence.selection)
+    
+    const [elementRefs, setElementRefs] = useState<HTMLElement[]>([])
 
     const insertLayer = useMutation((
       { storage, setMyPresence }, 
@@ -100,6 +102,20 @@ function PanzoomSVG({
         setCanvasState({ current: point, mode: CanvasMode.Translating })
     }, [state, transform])
 
+    const togglePalette = useCallback(() => {
+        showColorPicker ? history.pause() : history.resume();
+        setShowColorPicker(!showColorPicker)
+    }, [history, showColorPicker])
+
+    const deleteLayer = useMutation((
+        { setMyPresence, self, storage }
+    ) => {
+        history.resume()
+        const layerId = self.presence.selection[0]
+        layerId && storage.get('layers').delete(layerId)
+        setMyPresence({ selection: [] }, { addToHistory: true })
+    }, [history])
+
     const getAbsoluteCoordinates = (e: React.PointerEvent): Point => {
         return {
             x: (e.clientX - transform.x)/transform.scale,
@@ -123,7 +139,7 @@ function PanzoomSVG({
         }
         possibleRefs.push(document.getElementById('selection-box')!)
         possibleRefs.push(document.getElementById('selection-toolbox')!)
-
+        setElementRefs(possibleRefs.filter(Boolean))
         for(const ref of possibleRefs.filter(Boolean)) {
             if (event.target === ref) {
                 setPreventPan(true)
@@ -181,9 +197,21 @@ function PanzoomSVG({
             insertLayer(layerType as ShapeLayerType, getAbsoluteCoordinates(e))
         } else {
             setCanvasState({ mode: CanvasMode.None })
+            let clickedOutside = true
+            for(const ref of elementRefs) {
+                if(ref == e.target || ref.contains(e.target as Node)) {
+                    clickedOutside = false;
+                    break;
+                }
+            }
+            if(clickedOutside) {
+                setShowColorPicker(false)
+                history.resume();
+                setMyPresence({ selection: []}, { addToHistory: true })
+            }
         }
         history.resume()
-    }, [transform, state, layerType, insertLayer, panPrevention])
+    }, [transform, state, layerType, insertLayer, panPrevention, panPrevented, elementRefs])
 
     const getSelectionColor = useMemo(() => {
         const layerMap: {[key: string]: string} = {};
@@ -224,7 +252,7 @@ function PanzoomSVG({
                 </g>
                 <g>
                     <CursorsPresence transform={transform}/>
-                    <SelectionTools transform={transform} lastUsedColor={lastUsedColor} setLastUsedColor={setLastUsedColor}/>
+                    <SelectionTools transform={transform} deleteLayer={deleteLayer} togglePalette={togglePalette}/>
                 </g>
             </svg>
         </PanZoom>

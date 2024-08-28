@@ -106,3 +106,20 @@ export const translateLayer = (current: Point, movingCoordinates: Point) => {
   const deltaY = movingCoordinates.y - current.y;
   return { deltaX, deltaY }
 }
+
+export const getElementSize = (element: HTMLElement) => {
+  const result = element.getBoundingClientRect();
+  const styles = getComputedStyle(element);
+  const marginTop = parseInt(styles['marginTop'], 10) || 0;
+  const marginBottom = parseInt(styles['marginBottom'], 10) || 0;
+  const marginLeft = parseInt(styles['marginLeft'], 10) || 0;
+  const marginRight = parseInt(styles['marginRight'], 10) || 0;
+  return {
+    top: result.top + marginTop,
+    bottom: result.bottom + marginBottom,
+    left: result.left + marginLeft,
+    right: result.right + marginRight,
+    width: result.width + marginLeft + marginRight,
+    height: result.height + marginTop + marginBottom
+  }
+}

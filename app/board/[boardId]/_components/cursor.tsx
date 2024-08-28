@@ -1,7 +1,6 @@
-import usePanzoomTransform from "@/store/panzoom.store";
 import { useOther } from "@liveblocks/react";
 import { MousePointer2 } from "lucide-react";
-import { memo, useEffect, useRef } from "react";
+import { memo } from "react";
 interface ICursorProps {
     connectionId: number,
     color: string,
@@ -13,7 +12,6 @@ export const Cursor = memo(({
 }: ICursorProps) => {
     const { name } = useOther(connectionId, user => user.info)
     const cursor = useOther(connectionId, user => user.presence.cursor)
-    const mousePointerRef = useRef<SVGElement | any>()
     const POINTER_SIZE = 25;
 
     if(!cursor) {
@@ -34,7 +32,6 @@ export const Cursor = memo(({
         className="drop-shadow-sm"
         >
             <MousePointer2
-            ref={mousePointerRef}
             style={{
                 color,
                 fill: color,

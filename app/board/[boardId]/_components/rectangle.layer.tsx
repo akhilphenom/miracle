@@ -10,7 +10,7 @@ interface IRectangleLayerProps {
 }
 
 function RectangleComponent({
-    id, layer: { x, y, height, width, fill: { r, g, b } }, onPointerDown, selectionColor
+    id, layer: { x, y, height, width, fill: { r, g, b, a = 1 } }, onPointerDown, selectionColor
 }: IRectangleLayerProps) {
     const { transform: { scale } } = usePanzoomTransform();
     return (
@@ -26,9 +26,11 @@ function RectangleComponent({
             onPointerDown={(e) => onPointerDown(e, id)}
             style={{
                 height, width, 
-                backgroundColor: `rgb(${r},${g},${b})`,
-                borderWidth: 3/scale,
-                borderColor: selectionColor
+                backgroundColor: `rgba(${r},${g},${b},${a})`,
+                ... ( selectionColor ? {
+                    borderWidth: 3/scale,
+                    borderColor: selectionColor
+                } : {} )
             }}>
             </div>
         </foreignObject>

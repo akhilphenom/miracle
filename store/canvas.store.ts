@@ -3,14 +3,17 @@ import { create } from "zustand"
 
 type ICanvasState = {
     state: CanvasState
-    lastUsedColor: Color,
     layerType: LayerType
+    lastUsedColor: Color,
+    showColorPicker: boolean
 }
 
 export interface ICanvasStore {
     state: Partial<CanvasState>, 
-    lastUsedColor: Color,
     layerType: LayerType
+    lastUsedColor: Color,
+    showColorPicker: boolean,
+    setShowColorPicker: (value: boolean) => void;
     setMode: (mode: CanvasMode) => void, 
     setLastUsedColor: (color: Color) => void, 
     setLayerType: (layerType: LayerType) => void
@@ -30,10 +33,12 @@ const useCanvasStore = create<ICanvasStore>((set) => ({
         },
         corner: 1
     },
-    lastUsedColor: { r: 0, g: 0, b: 0 },
+    showColorPicker: false,
+    lastUsedColor: { r: 0, g: 0, b: 0, a: 1 },
     layerType: LayerType.Rectangle,
     setMode: (mode: CanvasMode) => set((store: ICanvasStore) => ({ state: { ...store.state, mode } })),
-    setLastUsedColor: (color: Color) => set((store: ICanvasStore) => ({ state: { ...store.state, lastUsedColor: color } })),
+    setShowColorPicker: (showColorPicker: boolean) => set((_: ICanvasStore) => ({ showColorPicker })),
+    setLastUsedColor: (color: Color) => set((_: ICanvasStore) => ({ lastUsedColor: color })),
     setLayerType: (layerType: LayerType) => set((_: ICanvasStore) => ({ layerType })),
     setCanvasState: (newState: Partial<ICanvasState['state']>) => set((store: ICanvasStore) => ({ state: { ...newState } }))
 }))
