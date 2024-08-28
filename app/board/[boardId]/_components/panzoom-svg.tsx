@@ -57,13 +57,12 @@ function PanzoomSVG({
         width: 100,
         fill: lastUsedColor
       })
-  
       liveLayerIds.push(layerId)
       liveLayers.set(layerId, layer)
   
       setMyPresence({ selection: [layerId] }, { addToHistory: true })
       setMode(CanvasMode.None)
-    }, [lastUsedColor])
+    }, [lastUsedColor, setLastUsedColor])
 
     const resizeSelectedLayer = useMutation((
         { self, storage },

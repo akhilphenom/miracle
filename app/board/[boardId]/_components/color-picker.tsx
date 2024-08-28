@@ -26,11 +26,11 @@ function ColorPickerComponent() {
         { storage, setMyPresence, self },
         fill: Color
     ) => {
-        setLastUsedColor(lastUsedColor)
+        setLastUsedColor(fill)
         const liveLayers = storage.get('layers');
         const layer = liveLayers.get(self.presence.selection[0])!;
         layer.update({ fill })
-    }, [layers])
+    }, [selection, setLastUsedColor])
 
     useEffect(() => {
         const el = document.getElementById('selection-toolbox')!
