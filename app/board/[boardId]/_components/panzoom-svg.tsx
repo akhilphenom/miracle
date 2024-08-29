@@ -115,6 +115,47 @@ function PanzoomSVG({
         setMyPresence({ selection: [] }, { addToHistory: true })
     }, [history])
 
+    const bringToFront = useMutation((
+        { self, storage, setMyPresence }
+    ) => {
+        const selection = self.presence.selection;
+        if(!selection?.length) {
+            return;
+        }
+        const layerIds = storage.get('layerIds');
+        const targets = []
+        const layers = layerIds.toArray();
+        for(let i=0; i<layers.length; i++) {
+            if(selection.includes(layers[i])) {
+                targets.push(i)
+            }
+        }
+        for(let i=targets.length-1; i>=0; i--) {
+            layerIds.move(targets[i], layers.length - i - 1)
+        }
+    }, [layerIds, state, transform])
+
+
+    const sendToBack = useMutation((
+        { self, storage, setMyPresence }
+    ) => {
+        const selection = self.presence.selection;
+        if(!selection?.length) {
+            return;
+        }
+        const layerIds = storage.get('layerIds');
+        const targets = []
+        const layers = layerIds.toArray();
+        for(let i=0; i<layers.length; i++) {
+            if(selection.includes(layers[i])) {
+                targets.push(i)
+            }
+        }
+        for(let i=0; i<targets.length; i++) {
+            layerIds.move(targets[i], i)
+        }
+    }, [layerIds, state, transform])
+
     const getAbsoluteCoordinates = (e: React.PointerEvent): Point => {
         return {
             x: (e.clientX - transform.x)/transform.scale,
@@ -251,7 +292,13 @@ function PanzoomSVG({
                 </g>
                 <g>
                     <CursorsPresence transform={transform}/>
-                    <SelectionTools transform={transform} deleteLayer={deleteLayer} togglePalette={togglePalette}/>
+                    <SelectionTools 
+                    sendToBack={sendToBack}
+                    bringToFront={bringToFront}
+                    transform={transform} 
+                    deleteLayer={deleteLayer} 
+                    togglePalette={togglePalette}
+                    />
                 </g>
             </svg>
         </PanZoom>

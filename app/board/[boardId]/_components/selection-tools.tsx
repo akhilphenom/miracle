@@ -3,19 +3,23 @@
 import { Button } from '@/components/ui/button';
 import { useSelectionBounds } from '@/lib/hooks/use-selection-bounds.hook';
 import { useSelf } from '@liveblocks/react';
-import { Palette, Trash2 } from 'lucide-react';
+import { BringToFront, Palette, SendToBack, Trash2 } from 'lucide-react';
 import React, { memo } from 'react'
 
 interface ISelectionToolProps {
     transform: { x: number, y: number, scale: number };
     togglePalette: () => void;
     deleteLayer: () => void
+    sendToBack: () => void
+    bringToFront: () => void
 }
 
 function SelectionToolsComponent({
     transform: { x, y, scale },
     togglePalette,
-    deleteLayer
+    deleteLayer,
+    sendToBack,
+    bringToFront
 }: ISelectionToolProps) {
     const selection = useSelf(me => me.presence.selection);
     const selectionBounds = useSelectionBounds();
@@ -24,7 +28,7 @@ function SelectionToolsComponent({
     }
 
     const TOOLBOX_HEIGHT = 40
-    const TOOLBOX_WIDTH = 200
+    const TOOLBOX_WIDTH = scale < 1 ? 240 : 320
 
     const height = TOOLBOX_HEIGHT/scale
     const width = TOOLBOX_WIDTH/scale
@@ -52,8 +56,14 @@ function SelectionToolsComponent({
                     paddingTop: 4/scale,
                     paddingBottom: 4/scale,
                 }}>
+                    <Button className='bg-white hover:bg-white text-black' onClick={sendToBack}>
+                        <SendToBack size={18/scale}/>
+                    </Button>
+                    <Button className='bg-white hover:bg-white text-black' onClick={bringToFront}>
+                        <BringToFront size={18/scale}/>
+                    </Button>
                     <Button className='bg-white hover:bg-white text-black' onClick={togglePalette}>
-                        <Palette size={18/scale} scale={scale}/>
+                        <Palette size={18/scale}/>
                     </Button>
                     <Button className='bg-white hover:bg-white text-black' onClick={deleteLayer}>
                         <Trash2 size={18/scale}/>
