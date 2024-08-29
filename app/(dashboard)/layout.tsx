@@ -23,9 +23,9 @@ function AuthState({children}: AuthStateProps) {
           </SignedOut>
       </div>
     );
-  }
+}
 
-export default function ({children}: DashboardLayoutProps) {
+const DashboardLayout = ({children}: DashboardLayoutProps) => {
     return (
         <AuthState>
             <main className="h-dvh w-dvw">
@@ -45,3 +45,5 @@ export default function ({children}: DashboardLayoutProps) {
         </AuthState>
     )
 }
+
+export default DashboardLayout

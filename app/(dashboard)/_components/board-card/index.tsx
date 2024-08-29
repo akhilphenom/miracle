@@ -9,7 +9,7 @@ import Actions from "@/components/actions";
 import { MoreHorizontal } from "lucide-react";
 import { useBoardContext } from "@/providers/boards-provider";
 
-export interface IBoardCardItemProps extends Document {
+export interface IBoardCardItemProps {
     _id: string,
     title: string;
     organizationIdClerk?: string;
@@ -69,7 +69,7 @@ export const BoardCardItem = ({
     )
 }
 
-BoardCardItem.Skeleton = () => (
+export const BoardCardItemSkeleton = () => (
     <div className="group border-slate-300 rounded-lg flex flex-col justify-between overflow-hidden aspect-[9/14]">
         <Skeleton className="h-full w-full"></Skeleton>
     </div>

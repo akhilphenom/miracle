@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { EmptyResult } from "./empty-result";
 import { useEffect } from "react";
-import { BoardCardItem, IBoardCardItemProps } from "./board-card";
+import { BoardCardItem, BoardCardItemSkeleton, IBoardCardItemProps } from "./board-card";
 import NewBoard from "./new-board";
 import { TBoardContext, useBoardContext } from "@/providers/boards-provider";
 import { Toggle } from "@/components/ui/toggle";
@@ -58,7 +58,7 @@ export const BoardList = ({
                 flex-1 basis-0 min-h-0 overflow-auto">
                     <NewBoard onClick={onCreateBoard} disabled={boardCreating}/>
                     {
-                        [].constructor(5).map((_: null, index: string) => <BoardCardItem.Skeleton key={index}/>)
+                        [].constructor(5).map((_: null, index: string) => <BoardCardItemSkeleton key={index}/>)
                     }
                 </div>
             </div>
